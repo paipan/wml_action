@@ -69,7 +69,7 @@ describe WmlAction::Section do
       File.open("spec/fixtures/attributes.cfg","r") do |f|
         s=WmlAction::Section.new.fromFile(f)
         s=s.subs[0]
-        expect(s.keys.length).to eq 3
+        expect(s.keys.length).to eq 5
         expect(s.keys).to include "number"
         expect(s.keys).to include "plain"
         expect(s.keys).to include "macrosed"

@@ -31,7 +31,7 @@ describe WmlAction::ActionSection do
     File.open("spec/fixtures/attributes.cfg","r") do |f|
       s=WmlAction::ActionSection.new.fromFile(f)
       s=s.subs[0][:value]
-      expect(s.keys.length).to eq 3
+      expect(s.keys.length).to eq 5
       expect(s.keys[0][:value]).to include "number"
       expect(s.keys[1][:value]).to include "plain"
       expect(s.keys[2][:value]).to include "macrosed"

@@ -19,16 +19,20 @@ describe WmlAction::Document do
     expect(s.subs[2].name).to eq "multitag"
   end
 
-  it "should read numeric atributes" do
+  it "should read atributes" do
     d = WmlAction::Document.from_file('spec/fixtures/attributes.cfg')
     s = d.root.subs[0]
-    expect(s.keys.length).to eq 3
+    expect(s.keys.length).to eq 5
     expect(s.keys).to include "number"
     expect(s.keys["number"]).to eq 50
     expect(s.keys).to include "plain"
     expect(s.keys["plain"]).to eq "One, Another"
     expect(s.keys).to include "macrosed"
     expect(s.keys["macrosed"]).to eq "{AMACRO}"
+    expect(s.keys).to include "empty"
+    expect(s.keys["empty"]).to eq ''
+    expect(s.keys).to include "likedigit"
+    expect(s.keys["likedigit"]).to eq '0.1:0.2'
   end
 
   it "should read string attributes" do
