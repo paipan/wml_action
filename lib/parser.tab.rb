@@ -18,7 +18,7 @@ $LOG.sev_threshold = Logger::INFO
 module WmlAction
   class WmlParser < Racc::Parser
 
-module_eval(<<'...end parser.y/module_eval...', 'parser.y', 39)
+module_eval(<<'...end parser.y/module_eval...', 'parser.y', 40)
 
 ...end parser.y/module_eval...
 ##### State transition tables begin ###
@@ -37,9 +37,9 @@ racc_action_pointer = [
     10,   nil,   nil ]
 
 racc_action_default = [
-    -1,   -17,    -2,    -3,    -5,   -17,   -17,    23,    -4,    -6,
-    -7,    -8,    -9,   -17,   -10,   -11,   -12,   -13,   -14,   -17,
-   -17,   -15,   -16 ]
+    -1,   -18,    -2,    -3,    -5,   -18,   -18,    23,    -4,    -6,
+    -7,    -8,    -9,   -10,   -11,   -12,   -13,   -14,   -15,   -18,
+   -18,   -16,   -17 ]
 
 racc_goto_table = [
      3,     6,     1,     2,     9,    11,    10,    15 ]
@@ -64,15 +64,16 @@ racc_reduce_table = [
   1, 16, :_reduce_7,
   1, 16, :_reduce_none,
   1, 16, :_reduce_9,
-  2, 17, :_reduce_10,
+  1, 17, :_reduce_10,
   2, 17, :_reduce_11,
   2, 17, :_reduce_12,
   2, 17, :_reduce_13,
-  1, 18, :_reduce_14,
-  2, 18, :_reduce_15,
-  3, 18, :_reduce_16 ]
+  2, 17, :_reduce_14,
+  1, 18, :_reduce_15,
+  2, 18, :_reduce_16,
+  3, 18, :_reduce_17 ]
 
-racc_reduce_n = 17
+racc_reduce_n = 18
 
 racc_shift_n = 23
 
@@ -191,48 +192,55 @@ module_eval(<<'.,.,', 'parser.y', 14)
 
 module_eval(<<'.,.,', 'parser.y', 16)
   def _reduce_10(val, _values, result)
-     $LOG.debug "Found plain attribute: #{val[0]}:#{val[1]}"; return WmlAction::Section::Attribute[val[0],val[1]] 
+     $LOG.debug "Found empty attribute: #{val[0]}"; return WmlAction::Section::Attribute[val[0],''] 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.y', 17)
   def _reduce_11(val, _values, result)
-     $LOG.debug "Found string attribute: #{val[0]}:#{val[1]}"; return WmlAction::Section::Attribute[val[0],val[1]] 
+     $LOG.debug "Found plain attribute: #{val[0]}:#{val[1]}"; return WmlAction::Section::Attribute[val[0],val[1]] 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.y', 18)
   def _reduce_12(val, _values, result)
-     $LOG.debug "Found macro attribute: #{val[0]}:#{val[1]}"; return WmlAction::Section::Attribute[val[0],val[1]] 
+     $LOG.debug "Found string attribute: #{val[0]}:#{val[1]}"; return WmlAction::Section::Attribute[val[0],val[1]] 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.y', 19)
   def _reduce_13(val, _values, result)
-     $LOG.debug "Found numeric attribute: #{val[0]}:#{val[1]}"; return WmlAction::Section::Attribute[val[0],val[1]]  
+     $LOG.debug "Found macro attribute: #{val[0]}:#{val[1]}"; return WmlAction::Section::Attribute[val[0],val[1]] 
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'parser.y', 21)
+module_eval(<<'.,.,', 'parser.y', 20)
   def _reduce_14(val, _values, result)
-     return " #{val[0]}" 
+     $LOG.debug "Found numeric attribute: #{val[0]}:#{val[1]}"; return WmlAction::Section::Attribute[val[0],val[1]]  
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.y', 22)
   def _reduce_15(val, _values, result)
-     return " "+val[0]+" "+val[1] 
+     return " #{val[0]}" 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.y', 23)
   def _reduce_16(val, _values, result)
+     return " "+val[0]+" "+val[1] 
+    result
+  end
+.,.,
+
+module_eval(<<'.,.,', 'parser.y', 24)
+  def _reduce_17(val, _values, result)
      return val[0] + "+" + val[2] 
     result
   end

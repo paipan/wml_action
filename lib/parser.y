@@ -14,7 +14,8 @@ rule
                 | attribute
                 | AMACRO    { $LOG.debug "Found a macro #{val[0]}"; return WmlAction::Section::Macro[val[0]] }
 
-    attribute   : ATTR APLAIN   { $LOG.debug "Found plain attribute: #{val[0]}:#{val[1]}"; return WmlAction::Section::Attribute[val[0],val[1]] }
+    attribute   : ATTR          { $LOG.debug "Found empty attribute: #{val[0]}"; return WmlAction::Section::Attribute[val[0],''] }
+                | ATTR APLAIN   { $LOG.debug "Found plain attribute: #{val[0]}:#{val[1]}"; return WmlAction::Section::Attribute[val[0],val[1]] }
                 | ATTR string_val     { $LOG.debug "Found string attribute: #{val[0]}:#{val[1]}"; return WmlAction::Section::Attribute[val[0],val[1]] }
                 | ATTR AMACRO   { $LOG.debug "Found macro attribute: #{val[0]}:#{val[1]}"; return WmlAction::Section::Attribute[val[0],val[1]] }
                 | ATTR ANUMBER  { $LOG.debug "Found numeric attribute: #{val[0]}:#{val[1]}"; return WmlAction::Section::Attribute[val[0],val[1]]  }
