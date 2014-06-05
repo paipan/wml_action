@@ -14,7 +14,7 @@ macro
     ATTR    /(\w+)=/
     ANUMBER /-?\d+/
     ASTR    /"[^"]*"/
-    AMACRO  /\{.+\}/
+    MACRO  /\{.+\}/
     APLAIN  /.+/
 
     BLANK   /[ \t]+/
@@ -24,13 +24,13 @@ rule
             /#{OTAG}/           { [:OTAG, match[1]] }
             /#{CTAG}/           { [:CTAG, match[1]] }
             /#{ATTR}/           { @state = :INATTR; [:ATTR, match[1]] }
-            /#{AMACRO}/         { [:AMACRO, text] }
+            /#{MACRO}/         { [:MACRO, text] }
 
     :INATTR /\n/                { @state = nil }
     :INATTR /#{BLANK}/
     :INATTR /#{ANUMBER}\s+/     { @state = nil; [:ANUMBER, text.to_i] }
     :INATTR /#{ASTR}/           { [:ASTR, text] }
-    :INATTR /#{AMACRO}/         { [:AMACRO, text] }
+    :INATTR /#{MACRO}/         { [:MACRO, text] }
     :INATTR /_/                 { [:UNDERSC, text] }
     :INATTR /\+/                { [text,text] }
     :INATTR /#{APLAIN}/         { [:APLAIN, text] }

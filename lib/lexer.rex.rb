@@ -17,7 +17,7 @@ class WmlParser < Racc::Parser
   ATTR    = /(\w+)=/
   ANUMBER = /-?\d+/
   ASTR    = /"[^"]*"/
-  AMACRO  = /\{.+\}/
+  MACRO   = /\{.+\}/
   APLAIN  = /.+/
   BLANK   = /[ \t]+/
 
@@ -74,8 +74,8 @@ class WmlParser < Racc::Parser
             action { [:CTAG, match[1]] }
           when text = ss.scan(/#{ATTR}/) then
             action { @state = :INATTR; [:ATTR, match[1]] }
-          when text = ss.scan(/#{AMACRO}/) then
-            action { [:AMACRO, text] }
+          when text = ss.scan(/#{MACRO}/) then
+            action { [:MACRO, text] }
           when text = ss.scan(/./) then
             # do nothing
           when text = ss.scan(/\n/) then
@@ -94,8 +94,8 @@ class WmlParser < Racc::Parser
             action { @state = nil; [:ANUMBER, text.to_i] }
           when text = ss.scan(/#{ASTR}/) then
             action { [:ASTR, text] }
-          when text = ss.scan(/#{AMACRO}/) then
-            action { [:AMACRO, text] }
+          when text = ss.scan(/#{MACRO}/) then
+            action { [:MACRO, text] }
           when text = ss.scan(/_/) then
             action { [:UNDERSC, text] }
           when text = ss.scan(/\+/) then
