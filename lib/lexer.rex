@@ -24,6 +24,7 @@ rule
             /#{OTAG}/           { [:OTAG, match[1]] }
             /#{CTAG}/           { [:CTAG, match[1]] }
             /#{ATTR}/           { @state = :INATTR; [:ATTR, match[1]] }
+            /#{AMACRO}/         { [:AMACRO, text] }
 
     :INATTR /\n/                { @state = nil }
     :INATTR /#{BLANK}/

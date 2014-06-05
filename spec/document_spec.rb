@@ -31,4 +31,25 @@ describe WmlAction::Document do
     expect(s.keys["macrosed"]).to eq "{AMACRO}"
   end
 
+  it "should read string attributes" do
+    d = WmlAction::Document.from_file('spec/fixtures/strings.cfg')
+    s = d.root.subs[0]
+    expect(s.keys.length).to eq 4
+    expect(s.keys).to include "simple"
+    expect(s.keys).to include "underscored"
+    expect(s.keys).to include "multiline"
+    expect(s.keys).to include "macrosed"
+    expect(s.keys["simple"]).to eq ' "Hello"'
+    expect(s.keys["underscored"]).to eq ' _ "Long Hello"'
+    expect(s.keys["multiline"]).to eq  " \"This is \nvery long\nlong string\""
+    expect(s.keys["macrosed"]).to eq " \"This amount\"+{AMOUNT}"
+  end
+
+  it "should read macros" do
+    d = WmlAction::Document.from_file('spec/fixtures/macros.cfg')
+    s = d.root.subs[0]
+    expect(s.macros.length).to eq 1
+    expect(s.macros[0]).to eq "{USEFUL_MACRO}"
+  end
+
 end

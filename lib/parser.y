@@ -15,16 +15,14 @@ rule
                 | AMACRO    { puts "Found a macro #{val[0]}"; return WmlAction::Section::Macro[val[0]] }
 
     attribute   : ATTR APLAIN   { puts "Found plain attribute: #{val[0]}:#{val[1]}"; return WmlAction::Section::Attribute[val[0],val[1]] }
-                | ATTR string_val     { puts "Found string attribute: #{val[0]}:#{val[1]}" }
+                | ATTR string_val     { puts "Found string attribute: #{val[0]}:#{val[1]}"; return WmlAction::Section::Attribute[val[0],val[1]] }
                 | ATTR AMACRO   { puts "Found macro attribute: #{val[0]}:#{val[1]}"; return WmlAction::Section::Attribute[val[0],val[1]] }
                 | ATTR ANUMBER  { puts "Found numeric attribute: #{val[0]}:#{val[1]}"; return WmlAction::Section::Attribute[val[0],val[1]]  }
 
-    string_val  : ASTR
+    string_val  : ASTR { return " #{val[0]}" }
                 | UNDERSC ASTR { return " "+val[0]+" "+val[1] }
-                | ASTR '+' AMACRO { return " "+val[0] + " + " + val[1] }
+                | ASTR '+' AMACRO { return " "+val[0] + "+" + val[2] }
 
-#                | DEF { puts "New def: #{val[0]}" }
-#                | MACRO { puts "New macro: #{val[0]}" }
 end
 
 ---- header ----
