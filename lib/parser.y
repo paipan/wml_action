@@ -1,13 +1,13 @@
 class WmlAction::WmlParser
 rule
-    target      :
+    target      : /* nothing */
                 | wml_doc { $LOG.debug "Found a target" }
 
     wml_doc     : section { $LOG.debug "Found a doc"; return WmlAction::Section.new(name: "Global", subs: [val[0]]) }
 
     section     : OTAG contents CTAG { $LOG.debug("Creating section #{val[0]}"); return WmlAction::Section.new(name: val[0], content: val[1]) }
 
-    contents    :                   { return [] }
+    contents    : /* nothing */     { return [] }
                 | contents content  { $LOG.debug("Append #{val[1]} to #{val[0]}"); return val[0]? val[0].push(val[1]) : [val[1]] }
 
     content     : section   { $LOG.debug "Found a content subsection #{val[0]}" }

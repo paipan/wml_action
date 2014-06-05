@@ -19,6 +19,8 @@ class WmlParser < Racc::Parser
   ASTR    = /"[^"]*"/
   MACRO   = /\{.+\}/
   APLAIN  = /.+/
+  SLASH   = /\//
+  COMMENT = /\#.*$/
   BLANK   = /[ \t]+/
 
   class ScanError < StandardError ; end
@@ -68,6 +70,8 @@ class WmlParser < Racc::Parser
         case state
         when nil then
           case
+          when text = ss.scan(/#{COMMENT}/) then
+            # do nothing
           when text = ss.scan(/#{OTAG}/) then
             action { [:OTAG, match[1]] }
           when text = ss.scan(/#{CTAG}/) then
@@ -76,6 +80,12 @@ class WmlParser < Racc::Parser
             action { @state = :INATTR; [:ATTR, match[1]] }
           when text = ss.scan(/#{MACRO}/) then
             action { [:MACRO, text] }
+          when text = ss.scan(/#{SLASH}/) then
+            action { [:SLASH, text] }
+          when text = ss.scan(/\-/) then
+            action { [text,text] }
+          when text = ss.scan(/\+/) then
+            action { [text,text] }
           when text = ss.scan(/./) then
             # do nothing
           when text = ss.scan(/\n/) then

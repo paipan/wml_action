@@ -5,7 +5,6 @@ describe WmlAction::Document do
 
   it 'should read a tag' do
     d = WmlAction::Document.from_file('spec/fixtures/tag.cfg')
-    puts d.to_s
     expect(d.root.subs.size).to eq 1
     expect(d.root.subs[0].name).to eq "tag"
   end
