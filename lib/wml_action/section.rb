@@ -1,4 +1,5 @@
 require 'logger'
+require 'debugger'
 
 $LOG=Logger.new(STDERR)
 $LOG.sev_threshold = Logger::INFO
@@ -9,11 +10,30 @@ module WmlAction
 
     @@tab_counter=-1
 
+    Attribute = Struct.new(:name,:value)
+    Macro = Struct.new(:value)
+
     def initialize(values={})
       @name=values[:name]||""
       @subs=values[:subs]||Array.new
       @keys=values[:keys]||Hash.new
       @macros=values[:macros]||Array.new
+      #TODO Maybe this should be merge of a sections?
+      load_content( values[:content] ) if values.key? :content
+    end
+
+    def <<(content)
+      case content
+      when WmlAction::Section::Attribute then @keys.merge!( Hash[*content] )
+      when WmlAction::Section::Macro then @macros<<content.value
+      when WmlAction::Section then @subs<<content
+      else raise TypeError.new("Can not add #{content.class}: #{content} to a Section")
+      end
+      self
+    end
+
+    def load_content(contents)
+      contents.each { |c| self<<c }
     end
 
     def fromFile(file,section_name="Global")

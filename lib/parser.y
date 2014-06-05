@@ -5,18 +5,19 @@ rule
 
     wml_doc     : section { puts "Found a doc"; return WmlAction::Section.new(name: "Global", subs: [val[0]]) }
 
-    section     : OTAG contents CTAG { puts("Creating section #{val[0]}"); return WmlAction::Section.new(name: val[0], subs: [val[1]]) }
+    section     : OTAG contents CTAG { puts("Creating section #{val[0]}"); return WmlAction::Section.new(name: val[0], content: val[1]) }
 
-    contents    :                   { return {} }
-                | contents content  { puts("Append #{val[1]} to #{val[0]}"); return val[0]? val[0].merge!(val[1]) : val[1] }
+    contents    :                   { return [] }
+                | contents content  { puts("Append #{val[1]} to #{val[0]}"); return val[0]? val[0].push(val[1]) : [val[1]] }
 
     content     : section   { puts "Found a content subsection #{val[0]}" }
                 | attribute
+                | AMACRO    { puts "Found a macro #{val[0]}"; return WmlAction::Section::Macro[val[0]] }
 
-    attribute   : ATTR APLAIN   { puts "Found plain attribute: #{val[0]}" }
+    attribute   : ATTR APLAIN   { puts "Found plain attribute: #{val[0]}:#{val[1]}"; return WmlAction::Section::Attribute[val[0],val[1]] }
                 | ATTR string_val     { puts "Found string attribute: #{val[0]}:#{val[1]}" }
-                | ATTR AMACRO   { puts "Found macro attribute: #{val[0]}" }
-                | ATTR ANUMBER  { puts "Found numeric attribute: #{val[0]}" }
+                | ATTR AMACRO   { puts "Found macro attribute: #{val[0]}:#{val[1]}"; return WmlAction::Section::Attribute[val[0],val[1]] }
+                | ATTR ANUMBER  { puts "Found numeric attribute: #{val[0]}:#{val[1]}"; return WmlAction::Section::Attribute[val[0],val[1]]  }
 
     string_val  : ASTR
                 | UNDERSC ASTR { return " "+val[0]+" "+val[1] }
