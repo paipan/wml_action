@@ -21,7 +21,7 @@ rule
 
     string_val  : ASTR { return " #{val[0]}" }
                 | UNDERSC ASTR { return " "+val[0]+" "+val[1] }
-                | ASTR '+' AMACRO { return " "+val[0] + "+" + val[2] }
+                | string_val '+' AMACRO { return val[0] + "+" + val[2] }
 
 end
 

@@ -1,5 +1,4 @@
 require 'logger'
-require 'debugger'
 
 $LOG=Logger.new(STDERR)
 $LOG.sev_threshold = Logger::INFO

@@ -23,19 +23,26 @@ module WmlAction
                     exit
             end
 
-            target=File.open(target_name)
+            #target=File.open(target_name)
             modlist=File.open(modlist_name)
-            target_root=Section.new.fromFile(target)
+            #target_root=Section.new.fromFile(target)
+            target=WmlAction::Document.from_file(target_name)
             #print target_root.dumpSection
             
             modlist_root=ActionSection.new.fromFile(modlist)
             #modlist_root.dumpSection
             
-            modlist_root.applyActionSection(target_root)
-            print target_root.dumpSection
+            modlist_root.applyActionSection(target.root)
+            print target.root.dumpSection
             
-            target.close
+            #target.close
             modlist.close
+        end
+
+        desc "read FILE", "Reads and outputs a wml"
+        def read(filename)
+            d=WmlAction::Document.from_file(filename)
+            print d.root.dumpSection()
         end
 
     end

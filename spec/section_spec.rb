@@ -83,7 +83,7 @@ describe WmlAction::Section do
       File.open("spec/fixtures/strings.cfg","r") do |f|
         s=WmlAction::Section.new.fromFile(f)
         s=s.subs[0]
-        expect(s.keys.length).to eq 4
+        expect(s.keys.length).to eq 5
         expect(s.keys).to include "simple"
         expect(s.keys).to include "underscored"
         expect(s.keys).to include "multiline"

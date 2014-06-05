@@ -34,7 +34,7 @@ describe WmlAction::Document do
   it "should read string attributes" do
     d = WmlAction::Document.from_file('spec/fixtures/strings.cfg')
     s = d.root.subs[0]
-    expect(s.keys.length).to eq 4
+    expect(s.keys.length).to eq 5
     expect(s.keys).to include "simple"
     expect(s.keys).to include "underscored"
     expect(s.keys).to include "multiline"
