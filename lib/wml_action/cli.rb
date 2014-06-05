@@ -14,11 +14,11 @@ module WmlAction
             target_name=original
             modlist_name=modlist
 
-            if not File.exist?(target_name) then
+            unless File.exist?(target_name)
                     $LOG.fatal "Invalid target file: #{target_name}"
                     exit
             end
-            if not File.exist?(modlist_name) then
+            unless File.exist?(modlist_name)
                     $LOG.fatal "Invalid modlist file: #{modlist_name}"
                     exit
             end

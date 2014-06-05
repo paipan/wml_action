@@ -6,7 +6,7 @@ module WmlAction
 class WmlParser < Racc::Parser
 
 options
-    debug
+    #debug
 
 macro
     OTAG    /\[(\w+)\]/
@@ -28,7 +28,7 @@ rule
 
     :INATTR /\n/                { @state = nil }
     :INATTR /#{BLANK}/
-    :INATTR /#{ANUMBER}/        { [:ANUMBER, text.to_i] }
+    :INATTR /#{ANUMBER}\s+/     { @state = nil; [:ANUMBER, text.to_i] }
     :INATTR /#{ASTR}/           { [:ASTR, text] }
     :INATTR /#{AMACRO}/         { [:AMACRO, text] }
     :INATTR /_/                 { [:UNDERSC, text] }

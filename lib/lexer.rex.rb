@@ -90,8 +90,8 @@ class WmlParser < Racc::Parser
             action { @state = nil }
           when text = ss.scan(/#{BLANK}/) then
             # do nothing
-          when text = ss.scan(/#{ANUMBER}/) then
-            action { [:ANUMBER, text.to_i] }
+          when text = ss.scan(/#{ANUMBER}\s+/) then
+            action { @state = nil; [:ANUMBER, text.to_i] }
           when text = ss.scan(/#{ASTR}/) then
             action { [:ASTR, text] }
           when text = ss.scan(/#{AMACRO}/) then
@@ -119,7 +119,6 @@ class WmlParser < Racc::Parser
     # auto-switch state
     self.state = token.last if token && token.first == :state
 
-    p [state, token]
     token
   end # def next_token
 end # class
