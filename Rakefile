@@ -11,6 +11,10 @@ task parser: [:lexer] do |t|
   ruby "-S racc lib/parser.y"
 end
 
+task action_parser: [:lexer] do |t|
+  ruby "-S racc lib/action_parser.y"
+end
+
 #task :test => [:parser, :lexer] do |t|
 #  sh "bundle exec ruby lib/parser.rb lib/sample.cfg"
 #end

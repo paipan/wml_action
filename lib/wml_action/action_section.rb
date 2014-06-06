@@ -10,12 +10,34 @@ module WmlAction
 
     @@tab_counter=-1
 
+    Attribute = Struct.new(:name, :value)
+    Macro = Struct.new(:value)
+    Action = Struct.new(:object, :action)
+    # TODO Filter should be using Set
+    Filter = Struct.new(:name, :value)
+
     def initialize(values={})
       @name=values[:name]||""
       @subs=values[:subs]||Array.new
       @keys=values[:keys]||Array.new
       @macros=values[:macros]||Array.new
       @filter=values[:filter]||Hash.new
+      load_content( values[:content] ) if values.key? :content
+    end
+
+    def <<(content, action='=')
+      case content
+      when WmlAction::ActionSection::Action then self.<<(*content)
+      when WmlAction::ActionSection::Attribute then @keys.push( {:action => '=', :value => Hash[*content] })
+      when WmlAction::ActionSection::Macro then @macros.push( {:action => action, :value => content.value } )
+      when WmlAction::ActionSection::Filter then @filter.merge!( Hash[*content] )
+      when WmlAction::ActionSection then @subs.push({:action => action, :value => content})
+      else raise TypeError.new("Can not add #{content.class}: #{content} to a ActionSection")
+      end
+    end
+
+    def load_content(contents)
+      contents.each { |c| self<<c }
     end
 
     def fromFile(file,section_name="Global")
