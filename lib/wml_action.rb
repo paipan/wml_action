@@ -6,6 +6,7 @@ require "wml_action/document"
 require "wml_action/action_document"
 require "action_parser.tab"
 require "parser.tab"
+require 'wml_action/log'
 
 module WmlAction
 end

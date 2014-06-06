@@ -1,10 +1,9 @@
-require 'logger'
-
-$LOG=Logger.new(STDERR)
-$LOG.sev_threshold = Logger::INFO
+require 'wml_action/log'
 
 module WmlAction
   class Section
+    include Log
+
     attr_accessor :name,:subs,:keys,:macros
 
     @@tab_counter=-1
@@ -59,17 +58,17 @@ module WmlAction
 
     def fromActionSection(act_sect)
       @name=act_sect.name
-      $LOG.debug "Section name: [#{[@name]}]"
+      log.debug "Section name: [#{[@name]}]"
       act_sect.subs.each do |sub|
-        $LOG.debug "Section sub: #{sub[:value].name}"
+        log.debug "Section sub: #{sub[:value].name}"
         @subs.push(sub[:value])
       end
       act_sect.keys.each do |key|
-        $LOG.debug "Section key: #{key[:value].to_a.join("=")}"
+        log.debug "Section key: #{key[:value].to_a.join("=")}"
         @keys.update(key[:value])
       end
       act_sect.macros.each do |macro|
-        $LOG.debug "Section macro: #{macro[:value]}"
+        log.debug "Section macro: #{macro[:value]}"
         @macros.push(macro[:value])
       end
 

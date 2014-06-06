@@ -4,22 +4,20 @@ require 'wml_action'
 module WmlAction
 
     class CLI < Thor
+      include Log
 
         desc "modify SRC DEST", "Modifies a wml"
         def modify(original,modlist)
-
-            $LOG=Logger.new(STDERR)
-            $LOG.sev_threshold = Logger::INFO
 
             target_name=original
             modlist_name=modlist
 
             unless File.exist?(target_name)
-                    $LOG.fatal "Invalid target file: #{target_name}"
+                    log.fatal "Invalid target file: #{target_name}"
                     exit
             end
             unless File.exist?(modlist_name)
-                    $LOG.fatal "Invalid modlist file: #{modlist_name}"
+                    log.fatal "Invalid modlist file: #{modlist_name}"
                     exit
             end
 

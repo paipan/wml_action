@@ -1,10 +1,8 @@
-require 'logger'
-
-$LOG=Logger.new(STDERR)
-$LOG.sev_threshold = Logger::INFO
+require 'wml_action/log'
 
 module WmlAction
   class ActionSection
+    include Log
 
     attr_accessor :name,:subs,:keys,:macros,:filter
 
@@ -75,14 +73,14 @@ module WmlAction
           return if section.keys[key] != @filter[key]
         end
       end
-      $LOG.info"Applying [#{@name}] action section to [#{section.name}] with filter: #{@filter.to_a.join('=')}" 
+      log.info"Applying [#{@name}] action section to [#{section.name}] with filter: #{@filter.to_a.join('=')}" 
       @keys.each do |key|
-        $LOG.debug "Processing key: #{key[:value].to_a.join("=")}"
+        log.debug "Processing key: #{key[:value].to_a.join("=")}"
         section.keys.update(key[:value]) if key[:action] =~ /\+|\=/
         #TODO: if action == "-"
       end
       @macros.each do |macro|
-        $LOG.debug "Adding macro: #{macro[:value]}"
+        log.debug "Adding macro: #{macro[:value]}"
         section.macros.push(macro[:value]) if macro[:action] =~ /\+|\=/
         section.macros.delete(macro[:value]) if macro[:action] =~ /\-/
       end
@@ -98,12 +96,12 @@ module WmlAction
     end
 
     def addActionSection(section)
-      $LOG.info "Adding [#{@name}] action section to [#{section.name}]"
+      log.info "Adding [#{@name}] action section to [#{section.name}]"
       section.subs.push(Section.new.fromActionSection(self))
     end
 
     def removeActionSection(section,sub,filter={})
-      $LOG.info "Removing [#{sub.name}] section from [#{section.name}] with filter #{filter.to_a.join('=')}"
+      log.info "Removing [#{sub.name}] section from [#{section.name}] with filter #{filter.to_a.join('=')}"
       if not filter.empty? then
         filter.each_key do |key|
           return if not sub.keys.has_key?(key)

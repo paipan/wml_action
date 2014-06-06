@@ -1,39 +1,39 @@
 class WmlAction::WmlActionParser
 rule
     target      : /* nothing */
-                | wml_doc { $LOG.debug "Found a target" }
+                | wml_doc { log.debug "Found a target" }
 
-    wml_doc     : section { $LOG.debug "Found a doc"; return WmlAction::ActionSection.new(name: "Global", subs: [{ :action => '=', :value => val[0]}]) }
+    wml_doc     : section { log.debug "Found a doc"; return WmlAction::ActionSection.new(name: "Global", subs: [{ :action => '=', :value => val[0]}]) }
 
-    section     : OTAG contents CTAG { $LOG.debug("Creating section #{val[0]}"); return WmlAction::ActionSection.new(name: val[0], content: val[1]) }
+    section     : OTAG contents CTAG { log.debug("Creating section #{val[0]}"); return WmlAction::ActionSection.new(name: val[0], content: val[1]) }
 
     contents    : /* nothing */     { return [] }
-                | contents content  { $LOG.debug("Append #{val[1]} to #{val[0]}"); return val[0]? val[0].push(val[1]) : [val[1]] }
+                | contents content  { log.debug("Append #{val[1]} to #{val[0]}"); return val[0]? val[0].push(val[1]) : [val[1]] }
 
     content     : action
-                | section   { $LOG.debug "Found a content subsection #{val[0]}" }
+                | section   { log.debug "Found a content subsection #{val[0]}" }
                 | attribute
                 | filter
-                | MACRO    { $LOG.debug "Found a macro #{val[0]}"; return WmlAction::ActionSection::Macro[val[0]] }
+                | MACRO    { log.debug "Found a macro #{val[0]}"; return WmlAction::ActionSection::Macro[val[0]] }
 
-    action      : aop section { $LOG.debug "Found a action section #{val[0]}:#{val[1]}"; return WmlAction::ActionSection::Action[val[1],val[0]] }
-                | aop MACRO { $LOG.debug "Found a action macro #{val[0]}:#{val[1]}"; return WmlAction::ActionSection::Action[WmlAction::ActionSection::Macro[val[1]],val[0]] }
+    action      : aop section { log.debug "Found a action section #{val[0]}:#{val[1]}"; return WmlAction::ActionSection::Action[val[1],val[0]] }
+                | aop MACRO { log.debug "Found a action macro #{val[0]}:#{val[1]}"; return WmlAction::ActionSection::Action[WmlAction::ActionSection::Macro[val[1]],val[0]] }
 
     aop         : '+'
                 | '-'
 
-    attribute   : ATTR          { $LOG.debug "Found empty attribute: #{val[0]}"; return WmlAction::ActionSection::Attribute[val[0],''] }
-                | ATTR APLAIN   { $LOG.debug "Found plain attribute: #{val[0]}:#{val[1]}"; return WmlAction::ActionSection::Attribute[val[0],val[1]] }
-                | ATTR string_val     { $LOG.debug "Found string attribute: #{val[0]}:#{val[1]}"; return WmlAction::ActionSection::Attribute[val[0],val[1]] }
-                | ATTR MACRO   { $LOG.debug "Found macro attribute: #{val[0]}:#{val[1]}"; return WmlAction::ActionSection::Attribute[val[0],val[1]] }
-                | ATTR ANUMBER  { $LOG.debug "Found numeric attribute: #{val[0]}:#{val[1]}"; return WmlAction::ActionSection::Attribute[val[0],val[1]]  }
+    attribute   : ATTR          { log.debug "Found empty attribute: #{val[0]}"; return WmlAction::ActionSection::Attribute[val[0],''] }
+                | ATTR APLAIN   { log.debug "Found plain attribute: #{val[0]}:#{val[1]}"; return WmlAction::ActionSection::Attribute[val[0],val[1]] }
+                | ATTR string_val     { log.debug "Found string attribute: #{val[0]}:#{val[1]}"; return WmlAction::ActionSection::Attribute[val[0],val[1]] }
+                | ATTR MACRO   { log.debug "Found macro attribute: #{val[0]}:#{val[1]}"; return WmlAction::ActionSection::Attribute[val[0],val[1]] }
+                | ATTR ANUMBER  { log.debug "Found numeric attribute: #{val[0]}:#{val[1]}"; return WmlAction::ActionSection::Attribute[val[0],val[1]]  }
 
     string_val  : ASTR { return " #{val[0]}" }
                 | UNDERSC ASTR { return " "+val[0]+" "+val[1] }
                 | string_val '+' MACRO { return val[0] + "+" + val[2] }
 
-    filter      : SLASH attribute { $LOG.debug "Found an attribute filter #{val[1]}"; return WmlAction::ActionSection::Filter[*val[1]] }
-                | SLASH MACRO { $LOG.debug "Found a macro filter #{val[1]}"; return WmlAction::ActionSection::Filter[val[1],true] }
+    filter      : SLASH attribute { log.debug "Found an attribute filter #{val[1]}"; return WmlAction::ActionSection::Filter[*val[1]] }
+                | SLASH MACRO { log.debug "Found a macro filter #{val[1]}"; return WmlAction::ActionSection::Filter[val[1],true] }
 
 end
 
@@ -43,11 +43,10 @@ end
 #
 require 'action_lexer.rex'
 require 'wml_action/action_section'
-
-$LOG=Logger.new(STDERR)
-$LOG.sev_threshold = Logger::INFO
+require 'wml_action/log'
 
 ---- inner ----
+include Log
 
 ---- footer ----
 

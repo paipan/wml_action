@@ -11,14 +11,13 @@ require 'racc/parser.rb'
 #
 require 'action_lexer.rex'
 require 'wml_action/action_section'
-
-$LOG=Logger.new(STDERR)
-$LOG.sev_threshold = Logger::INFO
+require 'wml_action/log'
 
 module WmlAction
   class WmlActionParser < Racc::Parser
 
-module_eval(<<'...end action_parser.y/module_eval...', 'action_parser.y', 51)
+module_eval(<<'...end action_parser.y/module_eval...', 'action_parser.y', 49)
+include Log
 
 ...end action_parser.y/module_eval...
 ##### State transition tables begin ###
@@ -164,21 +163,21 @@ Racc_debug_parser = false
 
 module_eval(<<'.,.,', 'action_parser.y', 3)
   def _reduce_2(val, _values, result)
-     $LOG.debug "Found a target" 
+     log.debug "Found a target" 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'action_parser.y', 5)
   def _reduce_3(val, _values, result)
-     $LOG.debug "Found a doc"; return WmlAction::ActionSection.new(name: "Global", subs: [{ :action => '=', :value => val[0]}]) 
+     log.debug "Found a doc"; return WmlAction::ActionSection.new(name: "Global", subs: [{ :action => '=', :value => val[0]}]) 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'action_parser.y', 7)
   def _reduce_4(val, _values, result)
-     $LOG.debug("Creating section #{val[0]}"); return WmlAction::ActionSection.new(name: val[0], content: val[1]) 
+     log.debug("Creating section #{val[0]}"); return WmlAction::ActionSection.new(name: val[0], content: val[1]) 
     result
   end
 .,.,
@@ -192,7 +191,7 @@ module_eval(<<'.,.,', 'action_parser.y', 9)
 
 module_eval(<<'.,.,', 'action_parser.y', 10)
   def _reduce_6(val, _values, result)
-     $LOG.debug("Append #{val[1]} to #{val[0]}"); return val[0]? val[0].push(val[1]) : [val[1]] 
+     log.debug("Append #{val[1]} to #{val[0]}"); return val[0]? val[0].push(val[1]) : [val[1]] 
     result
   end
 .,.,
@@ -201,7 +200,7 @@ module_eval(<<'.,.,', 'action_parser.y', 10)
 
 module_eval(<<'.,.,', 'action_parser.y', 13)
   def _reduce_8(val, _values, result)
-     $LOG.debug "Found a content subsection #{val[0]}" 
+     log.debug "Found a content subsection #{val[0]}" 
     result
   end
 .,.,
@@ -212,21 +211,21 @@ module_eval(<<'.,.,', 'action_parser.y', 13)
 
 module_eval(<<'.,.,', 'action_parser.y', 16)
   def _reduce_11(val, _values, result)
-     $LOG.debug "Found a macro #{val[0]}"; return WmlAction::ActionSection::Macro[val[0]] 
+     log.debug "Found a macro #{val[0]}"; return WmlAction::ActionSection::Macro[val[0]] 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'action_parser.y', 18)
   def _reduce_12(val, _values, result)
-     $LOG.debug "Found a action section #{val[0]}:#{val[1]}"; return WmlAction::ActionSection::Action[val[1],val[0]] 
+     log.debug "Found a action section #{val[0]}:#{val[1]}"; return WmlAction::ActionSection::Action[val[1],val[0]] 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'action_parser.y', 19)
   def _reduce_13(val, _values, result)
-     $LOG.debug "Found a action macro #{val[0]}:#{val[1]}"; return WmlAction::ActionSection::Action[WmlAction::ActionSection::Macro[val[1]],val[0]] 
+     log.debug "Found a action macro #{val[0]}:#{val[1]}"; return WmlAction::ActionSection::Action[WmlAction::ActionSection::Macro[val[1]],val[0]] 
     result
   end
 .,.,
@@ -237,35 +236,35 @@ module_eval(<<'.,.,', 'action_parser.y', 19)
 
 module_eval(<<'.,.,', 'action_parser.y', 24)
   def _reduce_16(val, _values, result)
-     $LOG.debug "Found empty attribute: #{val[0]}"; return WmlAction::ActionSection::Attribute[val[0],''] 
+     log.debug "Found empty attribute: #{val[0]}"; return WmlAction::ActionSection::Attribute[val[0],''] 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'action_parser.y', 25)
   def _reduce_17(val, _values, result)
-     $LOG.debug "Found plain attribute: #{val[0]}:#{val[1]}"; return WmlAction::ActionSection::Attribute[val[0],val[1]] 
+     log.debug "Found plain attribute: #{val[0]}:#{val[1]}"; return WmlAction::ActionSection::Attribute[val[0],val[1]] 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'action_parser.y', 26)
   def _reduce_18(val, _values, result)
-     $LOG.debug "Found string attribute: #{val[0]}:#{val[1]}"; return WmlAction::ActionSection::Attribute[val[0],val[1]] 
+     log.debug "Found string attribute: #{val[0]}:#{val[1]}"; return WmlAction::ActionSection::Attribute[val[0],val[1]] 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'action_parser.y', 27)
   def _reduce_19(val, _values, result)
-     $LOG.debug "Found macro attribute: #{val[0]}:#{val[1]}"; return WmlAction::ActionSection::Attribute[val[0],val[1]] 
+     log.debug "Found macro attribute: #{val[0]}:#{val[1]}"; return WmlAction::ActionSection::Attribute[val[0],val[1]] 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'action_parser.y', 28)
   def _reduce_20(val, _values, result)
-     $LOG.debug "Found numeric attribute: #{val[0]}:#{val[1]}"; return WmlAction::ActionSection::Attribute[val[0],val[1]]  
+     log.debug "Found numeric attribute: #{val[0]}:#{val[1]}"; return WmlAction::ActionSection::Attribute[val[0],val[1]]  
     result
   end
 .,.,
@@ -293,14 +292,14 @@ module_eval(<<'.,.,', 'action_parser.y', 32)
 
 module_eval(<<'.,.,', 'action_parser.y', 34)
   def _reduce_24(val, _values, result)
-     $LOG.debug "Found an attribute filter #{val[1]}"; return WmlAction::ActionSection::Filter[*val[1]] 
+     log.debug "Found an attribute filter #{val[1]}"; return WmlAction::ActionSection::Filter[*val[1]] 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'action_parser.y', 35)
   def _reduce_25(val, _values, result)
-     $LOG.debug "Found a macro filter #{val[1]}"; return WmlAction::ActionSection::Filter[val[1],true] 
+     log.debug "Found a macro filter #{val[1]}"; return WmlAction::ActionSection::Filter[val[1],true] 
     result
   end
 .,.,
