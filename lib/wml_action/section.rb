@@ -35,63 +35,6 @@ module WmlAction
       contents.each { |c| self<<c }
     end
 
-    def fromFile(file,section_name="Global")
-
-      $LOG.debug "Setting section name to: #{section_name}"
-
-      @name=section_name
-
-      while not file.eof? do
-        line=file.readline
-
-        $LOG.debug "Readed #{line}"
-
-        case line
-        when /^\s*$/; next
-        when /\s*\[\/(\w+)\]/;
-          $LOG.debug "Found exit from: #{$1}"
-          if @name != $1 then
-            puts "Found exit from #{$1}, expected #{@name}"
-            exit
-          end
-          break
-        when /\s*\[(\w+)\]/;  
-          $LOG.debug "Found new section: #{$1}" 
-          @subs.push(Section.new.fromFile(file,$1))
-          next
-        when /\s*(\w+)=(.*)/;
-          $LOG.debug "Found new key,value pair: #{$1} => #{$2}" 
-          key=$1
-          value=$2
-          #multiline keys are evil
-          if line=~/\"/ and not line=~/.*\".*\".*/ then
-            value+="\n"
-            begin
-              line=file.readline
-              value+=line
-            end until line=~/\"/
-            value.chomp!
-            $LOG.debug "Found multiline key:\n #{key}=#{value}" 
-          end
-          @keys.store(key,value)
-          next
-        when /\s*(\{.*\})/;
-          $LOG.debug "Found new macro: #{$1}" 
-          @macros.push($1)
-          next
-        when /\s*(\#.*)/;
-          $LOG.debug "Found new misc: #{$1}" 
-          @macros.push($1)
-          next
-        else
-          $LOG.fatal "Can't understand \"#{line}\""
-          exit
-        end
-      end
-
-      return self
-    end
-
     def dumpSection
       text=String.new
       text+="\t"*@@tab_counter if @@tab_counter >= 0
