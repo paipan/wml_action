@@ -6,8 +6,13 @@ module WmlAction
     class CLI < Thor
       include Log
 
+      class_option :verbose, type: :boolean, aliases: '-v'
+      class_option :debug, type: :boolean, aliases: '-d'
+
         desc "modify SRC DEST", "Modifies a wml"
         def modify(original,modlist)
+            log.level=Logger::INFO if options[:verbose]
+            log.level=Logger::DEBUG if options[:debug]
 
             target_name=original
             modlist_name=modlist
@@ -31,14 +36,18 @@ module WmlAction
 
         desc "read FILE", "Reads and outputs a wml"
         def read(filename)
+            log.level=Logger::INFO if options[:verbose]
+            log.level=Logger::DEBUG if options[:debug]
             d=Document.from_file(filename)
-            print d.root.dumpSection()
+            print d.root.dumpSection
         end
 
         desc "action_read FILE", "Reads and outputs an action wml"
         def action_read(filename)
+            log.level=Logger::INFO if options[:verbose]
+            log.level=Logger::DEBUG if options[:debug]
             d=ActionDocument.from_file(filename)
-            print d.root.dumpSection()
+            print d.root.dumpSection
         end
 
     end
