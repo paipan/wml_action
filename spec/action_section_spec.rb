@@ -23,10 +23,10 @@ module WmlAction
         end
 
         let(:target) do
-          t = Section.new
-          t << Section::Attribute[:hp,10]
-          t << Section.new(name: 'attack')
-          t << Section.new(name: 'attack')
+          t = ActionSection.new
+          t << ActionSection::Attribute[:hp,10]
+          t << ActionSection.new(name: 'attack')
+          t << ActionSection.new(name: 'attack')
           actions.applyActionSection(t)
           t
         end
@@ -61,16 +61,16 @@ module WmlAction
           a = ActionSection.new
           sub = ActionSection.new(name: 'attack')
           sub << ActionSection::Attribute[:type,'blunt']
-          a.<<(sub, '+')
+          a << ActionSection::Action[sub, '+']
           sub = ActionSection.new(name: 'resists')
-          a.<<(sub, '+')
-          a.<<(ActionSection::Macro['{REGENERATE}'], '+')
+          a << ActionSection::Action[sub, '+']
+          a << ActionSection::Action[ActionSection::Macro['{REGENERATE}'], '+']
           a
         end
 
         let(:target) do
-          t = Section.new
-          t << Section.new(name: 'attack')
+          t = ActionSection.new
+          t << ActionSection.new(name: 'attack')
           actions.applyActionSection(t)
           t
         end
@@ -95,15 +95,15 @@ module WmlAction
         let(:actions) do
           a = ActionSection.new
           sub = ActionSection.new(name: 'attack')
-          a.<<(sub, '-')
-          a.<<(ActionSection::Macro['{REGENERATE}'], '-')
+          a << ActionSection::Action[sub,'-']
+          a << ActionSection::Action[ActionSection::Macro['{REGENERATE}'], '-']
           a
         end
 
         let(:target) do
-          t = Section.new
-          t << Section.new(name: 'attack')
-          t << Section::Macro['{REGENERATE}']
+          t = ActionSection.new
+          t << ActionSection.new(name: 'attack')
+          t << ActionSection::Macro['{REGENERATE}']
           actions.applyActionSection(t)
           t
         end
@@ -129,14 +129,14 @@ module WmlAction
         end
 
         let(:target) do
-          t = Section.new
-          sub = Section.new(name: 'attack')
-          sub << Section::Attribute[:type,'blunt']
-          sub << Section::Attribute[:damage, 25]
+          t = ActionSection.new
+          sub = ActionSection.new(name: 'attack')
+          sub << ActionSection::Attribute[:type,'blunt']
+          sub << ActionSection::Attribute[:damage, 25]
           t << sub
-          sub = Section.new(name: 'attack')
-          sub << Section::Attribute[:type,'pierce']
-          sub << Section::Attribute[:damage, 25]
+          sub = ActionSection.new(name: 'attack')
+          sub << ActionSection::Attribute[:type,'pierce']
+          sub << ActionSection::Attribute[:damage, 25]
           t << sub
           actions.applyActionSection(t)
           t

@@ -170,7 +170,7 @@ module_eval(<<'.,.,', 'action_parser.y', 3)
 
 module_eval(<<'.,.,', 'action_parser.y', 5)
   def _reduce_3(val, _values, result)
-     log.debug "Found a doc"; return WmlAction::ActionSection.new(name: "Global", subs: [{ :action => '=', :value => val[0]}]) 
+     log.debug "Found a doc"; return WmlAction::ActionSection.new(name: "Global", subs: [val[0]]) 
     result
   end
 .,.,

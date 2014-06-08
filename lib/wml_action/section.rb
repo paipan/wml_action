@@ -63,10 +63,8 @@ module WmlAction
         log.debug "Section sub: #{sub[:value].name}"
         @subs.push(sub[:value])
       end
-      act_sect.keys.each do |key|
-        log.debug "Section key: #{key[:value].to_a.join("=")}"
-        @keys.update(key[:value])
-      end
+      log.debug "Section keys: #{act_sect.keys}"
+      @keys=act_sect.keys.clone
       act_sect.macros.each do |macro|
         log.debug "Section macro: #{macro[:value]}"
         @macros.push(macro[:value])

@@ -3,7 +3,7 @@ rule
     target      : /* nothing */
                 | wml_doc { log.debug "Found a target" }
 
-    wml_doc     : section { log.debug "Found a doc"; return WmlAction::ActionSection.new(name: "Global", subs: [{ :action => '=', :value => val[0]}]) }
+    wml_doc     : section { log.debug "Found a doc"; return WmlAction::ActionSection.new(name: "Global", subs: [val[0]]) }
 
     section     : OTAG contents CTAG { log.debug("Creating section #{val[0]}"); return WmlAction::ActionSection.new(name: val[0], content: val[1]) }
 
