@@ -156,6 +156,64 @@ module WmlAction
 
     end
 
+    describe '#add and #<<' do
+
+      it 'returns self' do
+        s = ActionSection.new << ActionSection::Attribute[:hp,25]
+        expect(s).to be_kind_of(ActionSection)
+      end
+
+    end
+
+    describe '#match?' do
+      it 'matches filter'
+    end
+
+    describe '#to_s' do
+      let(:s) { ActionSection.new(name: 'unit') }
+
+      it 'prints tags for section' do
+        expect(s.to_s).to eq "[unit]\n[/unit]\n"
+      end
+
+      it 'prints attributes' do
+        s << ActionSection::Attribute[:hp,25]
+        s << ActionSection::Attribute[:race,'human']
+        expect(s.to_s).to eq <<-EOS.gsub(/^\s+\|/, '')
+        |[unit]
+        |\thp=25
+        |\trace=human
+        |[/unit]
+        EOS
+      end
+
+      it 'prints macros' do
+        s << ActionSection::Macro['{REGENERATES}']
+        s << ActionSection::Macro['{INVISIBLE}']
+        expect(s.to_s).to eq <<-EOS.gsub(/^\s+\|/, '')
+        |[unit]
+        |\t{REGENERATES}
+        |\t{INVISIBLE}
+        |[/unit]
+        EOS
+      end
+
+      it 'prints sections' do
+        s << ActionSection.new(name: 'attack')
+        s << ActionSection.new(name: 'resists')
+        expect(s.to_s).to eq <<-EOS.gsub(/^\s+\|/, '')
+        |[unit]
+        |\t[attack]
+        |\t[/attack]
+        |\t[resists]
+        |\t[/resists]
+        |[/unit]
+        EOS
+      end
+
+    end
+
+
   end
 
 end

@@ -1,5 +1,6 @@
 require 'wml_action/log'
 require 'set'
+require 'debugger'
 
 module WmlAction
   class ActionSection
@@ -9,7 +10,12 @@ module WmlAction
 
     @@tab_counter=-1
 
-    Attribute = Struct.new(:name, :value)
+    Attribute = Struct.new(:name, :value) do
+      def to_s
+        "#{@name}=#{@value}"
+      end
+    end
+
     Macro = Struct.new(:value)
     Action = Struct.new(:object, :action)
     # TODO Filter should be using Set
@@ -34,10 +40,23 @@ module WmlAction
       when WmlAction::ActionSection then @subs.push(content)
       else raise TypeError.new("Can not add #{content.class}: #{content} to a ActionSection")
       end
+      return self
     end
 
     def load_content(contents)
       contents.each { |c| self<<c }
+    end
+
+    def to_s(indent=0)
+      i=indent
+      t="\t"
+      return <<-EOS.gsub(/^\s+\|/, '').gsub(/^$\n/,'')
+        |#{t*i}[#{@name}]
+        |#{(@keys.map   { |k,v| "#{t*(i+1)}#{k}=#{v}" }).join("\n")}
+        |#{(@macros.map { |m| "#{t*(i+1)}#{m}" }).join("\n")}
+        |#{(@subs.map   { |s| "#{s.to_s(i+1)}" }).join("\n")}
+        |#{t*i}[/#{@name}]
+      EOS
     end
 
     def dumpSection
