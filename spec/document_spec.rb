@@ -3,15 +3,15 @@ require "debugger"
 
 module WmlAction
 
-  describe WmlAction::ActionDocument do
+  describe WmlAction::Document do
 
     it 'should read a tag' do
-      d = ActionDocument.from_file('spec/fixtures/tag.cfg')
+      d = Document.from_file('spec/fixtures/tag.cfg')
       expect(d.root.name).to eq "tag"
     end
 
     it "should read inners" do
-      d = ActionDocument.from_file('spec/fixtures/inners.cfg')
+      d = Document.from_file('spec/fixtures/inners.cfg')
       s = d.root
       expect(s.subs.length).to eq 3
       expect(s.subs[0].name).to eq "inner"
@@ -20,7 +20,7 @@ module WmlAction
     end
 
     it "should read atributes" do
-      d = ActionDocument.from_file('spec/fixtures/attributes.cfg')
+      d = Document.from_file('spec/fixtures/attributes.cfg')
       s = d.root
       expect(s.keys.length).to eq 5
       expect(s.keys).to include "number"
@@ -36,7 +36,7 @@ module WmlAction
     end
 
     it "should read string attributes" do
-      d = ActionDocument.from_file('spec/fixtures/strings.cfg')
+      d = Document.from_file('spec/fixtures/strings.cfg')
       s = d.root
       expect(s.keys.length).to eq 5
       expect(s.keys).to include "simple"
@@ -50,13 +50,13 @@ module WmlAction
     end
 
     it "should read macros" do
-      d = ActionDocument.from_file('spec/fixtures/macros.cfg')
+      d = Document.from_file('spec/fixtures/macros.cfg')
       s = d.root
       expect(s.macros).to include "{USEFUL_MACRO}"
     end
 
     it "should read filters" do
-      d = ActionDocument.from_file('spec/fixtures/filter.cfg')
+      d = Document.from_file('spec/fixtures/filter.cfg')
       s = d.root
       expect(s.filter.length).to eq 2
       expect(s.filter).to include "type"
@@ -65,11 +65,11 @@ module WmlAction
     end
 
     it "should read actions" do
-      d = ActionDocument.from_file('spec/fixtures/actions.cfg')
+      d = Document.from_file('spec/fixtures/actions.cfg')
       s = d.root
       expect(s.actions.length).to eq 4
-      expect(s.actions).to include ActionSection::Action[ActionSection::Macro['{VARIABLES}'],'+']
-      expect(s.actions).to include ActionSection::Action[ActionSection::Macro['{ABILITIES}'],'-']
+      expect(s.actions).to include Section::Action[Section::Macro['{VARIABLES}'],'+']
+      expect(s.actions).to include Section::Action[Section::Macro['{ABILITIES}'],'-']
       expect(s.actions[2].action).to eq "+"
       expect(s.actions[2].object.name).to eq "attack"
       expect(s.actions[3].action).to eq "-"

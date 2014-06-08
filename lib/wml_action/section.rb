@@ -2,7 +2,7 @@ require 'wml_action/log'
 require 'set'
 
 module WmlAction
-  class ActionSection
+  class Section
     include Log
 
     attr_accessor :name,:subs,:keys,:macros,:filter, :actions
@@ -42,12 +42,12 @@ module WmlAction
 
     def <<(content)
       case content
-      when WmlAction::ActionSection::Action then @actions<<content
-      when WmlAction::ActionSection::Attribute then @keys.merge!( Hash[*content] )
-      when WmlAction::ActionSection::Macro then @macros.add( content.value )
-      when WmlAction::ActionSection::Filter then @filter.merge!( Hash[*content] )
-      when WmlAction::ActionSection then @subs.push(content)
-      else raise TypeError.new("Can not add #{content.class}: #{content} to a ActionSection")
+      when WmlAction::Section::Action then @actions<<content
+      when WmlAction::Section::Attribute then @keys.merge!( Hash[*content] )
+      when WmlAction::Section::Macro then @macros.add( content.value )
+      when WmlAction::Section::Filter then @filter.merge!( Hash[*content] )
+      when WmlAction::Section then @subs.push(content)
+      else raise TypeError.new("Can not add #{content.class}: #{content} to a Section")
       end
       return self
     end
@@ -71,7 +71,7 @@ module WmlAction
       EOS
     end
 
-    def applyActionSection(section)
+    def applySection(section)
       return if @name != section.name
       if not @filter.empty? then
         @filter.each_key do |key|
@@ -90,7 +90,7 @@ module WmlAction
       end
       @subs.each do |act_sub|
         section.subs.each do |sub|
-          act_sub.applyActionSection(sub)
+          act_sub.applySection(sub)
         end
       end
       @actions.each do |a|
@@ -104,7 +104,7 @@ module WmlAction
 
     def delete(section,content)
       case content
-      when ActionSection then section.subs.delete_if { |s| s.match?( content.filter ) }
+      when Section then section.subs.delete_if { |s| s.match?( content.filter ) }
       when Macro then section.macros.delete(content.value)
       end
     end

@@ -1,8 +1,8 @@
-require "wml_action/action_section"
+require "wml_action/section"
 
 module WmlAction
 
-  class ActionDocument
+  class Document
 
     attr_reader :root
 
@@ -11,9 +11,9 @@ module WmlAction
     end
 
     def self.from_file(filename)
-      root = WmlActionParser.new.parse_file(filename)
+      root = WmlParser.new.parse_file(filename)
       #TODO file exceptions
-      ActionDocument.new(root)
+      Document.new(root)
     end
 
   end

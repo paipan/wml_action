@@ -3,31 +3,31 @@ require 'debugger'
 
 module WmlAction
 
-  describe ActionSection do
+  describe Section do
 
-    describe '#applyActionSection' do
+    describe '#applySection' do
 
       context 'when no action' do
 
         let(:actions) do
-          a = ActionSection.new
-          a << ActionSection::Attribute[:hp,25]
-          a << ActionSection::Macro['{REGENERATE}']
-          sub = ActionSection.new(name: 'attack')
-          sub << ActionSection::Attribute[:type,'blunt']
+          a = Section.new
+          a << Section::Attribute[:hp,25]
+          a << Section::Macro['{REGENERATE}']
+          sub = Section.new(name: 'attack')
+          sub << Section::Attribute[:type,'blunt']
           a << sub
-          sub = ActionSection.new(name: 'resists')
-          sub << ActionSection::Attribute[:cold,100]
+          sub = Section.new(name: 'resists')
+          sub << Section::Attribute[:cold,100]
           a << sub
           a
         end
 
         let(:target) do
-          t = ActionSection.new
-          t << ActionSection::Attribute[:hp,10]
-          t << ActionSection.new(name: 'attack')
-          t << ActionSection.new(name: 'attack')
-          actions.applyActionSection(t)
+          t = Section.new
+          t << Section::Attribute[:hp,10]
+          t << Section.new(name: 'attack')
+          t << Section.new(name: 'attack')
+          actions.applySection(t)
           t
         end
 
@@ -58,20 +58,20 @@ module WmlAction
       context 'when + action' do
 
         let(:actions) do
-          a = ActionSection.new
-          sub = ActionSection.new(name: 'attack')
-          sub << ActionSection::Attribute[:type,'blunt']
-          a << ActionSection::Action[sub, '+']
-          sub = ActionSection.new(name: 'resists')
-          a << ActionSection::Action[sub, '+']
-          a << ActionSection::Action[ActionSection::Macro['{REGENERATE}'], '+']
+          a = Section.new
+          sub = Section.new(name: 'attack')
+          sub << Section::Attribute[:type,'blunt']
+          a << Section::Action[sub, '+']
+          sub = Section.new(name: 'resists')
+          a << Section::Action[sub, '+']
+          a << Section::Action[Section::Macro['{REGENERATE}'], '+']
           a
         end
 
         let(:target) do
-          t = ActionSection.new
-          t << ActionSection.new(name: 'attack')
-          actions.applyActionSection(t)
+          t = Section.new
+          t << Section.new(name: 'attack')
+          actions.applySection(t)
           t
         end
 
@@ -93,18 +93,18 @@ module WmlAction
       context 'when - action' do
 
         let(:actions) do
-          a = ActionSection.new
-          sub = ActionSection.new(name: 'attack')
-          a << ActionSection::Action[sub,'-']
-          a << ActionSection::Action[ActionSection::Macro['{REGENERATE}'], '-']
+          a = Section.new
+          sub = Section.new(name: 'attack')
+          a << Section::Action[sub,'-']
+          a << Section::Action[Section::Macro['{REGENERATE}'], '-']
           a
         end
 
         let(:target) do
-          t = ActionSection.new
-          t << ActionSection.new(name: 'attack')
-          t << ActionSection::Macro['{REGENERATE}']
-          actions.applyActionSection(t)
+          t = Section.new
+          t << Section.new(name: 'attack')
+          t << Section::Macro['{REGENERATE}']
+          actions.applySection(t)
           t
         end
 
@@ -120,25 +120,25 @@ module WmlAction
 
       context 'when filtered section' do
         let(:actions) do
-          a = ActionSection.new
-          sub = ActionSection.new(name: 'attack')
-          sub << ActionSection::Filter[:type,'blunt']
-          sub << ActionSection::Attribute[:damage, 30]
+          a = Section.new
+          sub = Section.new(name: 'attack')
+          sub << Section::Filter[:type,'blunt']
+          sub << Section::Attribute[:damage, 30]
           a << sub
           a
         end
 
         let(:target) do
-          t = ActionSection.new
-          sub = ActionSection.new(name: 'attack')
-          sub << ActionSection::Attribute[:type,'blunt']
-          sub << ActionSection::Attribute[:damage, 25]
+          t = Section.new
+          sub = Section.new(name: 'attack')
+          sub << Section::Attribute[:type,'blunt']
+          sub << Section::Attribute[:damage, 25]
           t << sub
-          sub = ActionSection.new(name: 'attack')
-          sub << ActionSection::Attribute[:type,'pierce']
-          sub << ActionSection::Attribute[:damage, 25]
+          sub = Section.new(name: 'attack')
+          sub << Section::Attribute[:type,'pierce']
+          sub << Section::Attribute[:damage, 25]
           t << sub
-          actions.applyActionSection(t)
+          actions.applySection(t)
           t
         end
 
@@ -159,8 +159,8 @@ module WmlAction
     describe '#add and #<<' do
 
       it 'returns self' do
-        s = ActionSection.new << ActionSection::Attribute[:hp,25]
-        expect(s).to be_kind_of(ActionSection)
+        s = Section.new << Section::Attribute[:hp,25]
+        expect(s).to be_kind_of(Section)
       end
 
     end
@@ -170,15 +170,15 @@ module WmlAction
     end
 
     describe '#to_s' do
-      let(:s) { ActionSection.new(name: 'unit') }
+      let(:s) { Section.new(name: 'unit') }
 
       it 'prints tags for section' do
         expect(s.to_s).to eq "[unit]\n[/unit]\n"
       end
 
       it 'prints attributes' do
-        s << ActionSection::Attribute[:hp,25]
-        s << ActionSection::Attribute[:race,'human']
+        s << Section::Attribute[:hp,25]
+        s << Section::Attribute[:race,'human']
         expect(s.to_s).to eq <<-EOS.gsub(/^\s+\|/, '')
         |[unit]
         |\thp=25
@@ -188,8 +188,8 @@ module WmlAction
       end
 
       it 'prints macros' do
-        s << ActionSection::Macro['{REGENERATES}']
-        s << ActionSection::Macro['{INVISIBLE}']
+        s << Section::Macro['{REGENERATES}']
+        s << Section::Macro['{INVISIBLE}']
         expect(s.to_s).to eq <<-EOS.gsub(/^\s+\|/, '')
         |[unit]
         |\t{REGENERATES}
@@ -199,8 +199,8 @@ module WmlAction
       end
 
       it 'prints sections' do
-        s << ActionSection.new(name: 'attack')
-        s << ActionSection.new(name: 'resists')
+        s << Section.new(name: 'attack')
+        s << Section.new(name: 'resists')
         expect(s.to_s).to eq <<-EOS.gsub(/^\s+\|/, '')
         |[unit]
         |\t[attack]
@@ -212,8 +212,8 @@ module WmlAction
       end
 
       it 'prints filters' do
-        s << ActionSection::Filter[:hp,25]
-        s << ActionSection::Filter[:race,'human']
+        s << Section::Filter[:hp,25]
+        s << Section::Filter[:race,'human']
         expect(s.to_s).to eq <<-EOS.gsub(/^\s+\|/, '')
         |[unit]
         |\t/ hp=25
@@ -223,8 +223,8 @@ module WmlAction
       end
 
       it 'prints actions' do
-        s << ActionSection::Action[ActionSection.new(name: 'attack'),'+']
-        s << ActionSection::Action[ActionSection::Macro['{REGENERATES}'],'-']
+        s << Section::Action[Section.new(name: 'attack'),'+']
+        s << Section::Action[Section::Macro['{REGENERATES}'],'-']
         expect(s.to_s).to eq <<-EOS.gsub(/^\s+\|/, '')
         |[unit]
         |\t+ [attack]

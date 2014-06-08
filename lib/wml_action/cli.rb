@@ -26,11 +26,11 @@ module WmlAction
                     exit
             end
 
-            target=ActionDocument.from_file(target_name)
-            modlist=ActionDocument.from_file(modlist_name)
+            target=Document.from_file(target_name)
+            modlist=Document.from_file(modlist_name)
 
-            modlist.root.applyActionSection(target.root)
-            print target.root.dumpSection
+            modlist.root.applySection(target.root)
+            print target.root.to_s
 
         end
 
@@ -38,7 +38,7 @@ module WmlAction
         def read(filename)
             log.level=Logger::INFO if options[:verbose]
             log.level=Logger::DEBUG if options[:debug]
-            d=ActionDocument.from_file(filename)
+            d=Document.from_file(filename)
             print d.root.to_s
         end
 
@@ -46,7 +46,7 @@ module WmlAction
         def action_read(filename)
             log.level=Logger::INFO if options[:verbose]
             log.level=Logger::DEBUG if options[:debug]
-            d=ActionDocument.from_file(filename)
+            d=Document.from_file(filename)
             print d.root.to_s
         end
 
