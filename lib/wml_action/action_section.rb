@@ -1,6 +1,5 @@
 require 'wml_action/log'
 require 'set'
-require 'debugger'
 
 module WmlAction
   class ActionSection
@@ -11,15 +10,27 @@ module WmlAction
     @@tab_counter=-1
 
     Attribute = Struct.new(:name, :value) do
-      def to_s
-        "#{@name}=#{@value}"
+      def to_s(indent=0)
+        "#{name}=#{value}"
       end
     end
 
-    Macro = Struct.new(:value)
-    Action = Struct.new(:object, :action)
+    Macro = Struct.new(:value) do
+      def to_s(indent=0,dummy=0)
+        value.to_s
+      end
+    end
+    Action = Struct.new(:object, :action) do
+      def to_s(indent=0)
+        "#{action} #{object.to_s(indent,0)}"
+      end
+    end
     # TODO Filter should be using Set
-    Filter = Struct.new(:name, :value)
+    Filter = Struct.new(:name, :value) do
+      def to_s(indent=0)
+        "/ #{name}=#{value}"
+      end
+    end
 
     def initialize(values={})
       @name=values[:name]||""
@@ -47,11 +58,14 @@ module WmlAction
       contents.each { |c| self<<c }
     end
 
-    def to_s(indent=0)
+    def to_s(indent=0,indent_first_line=1)
       i=indent
       t="\t"
+      ifl=indent_first_line
       return <<-EOS.gsub(/^\s+\|/, '').gsub(/^$\n/,'')
-        |#{t*i}[#{@name}]
+        |#{t*i*ifl}[#{@name}]
+        |#{(@filter.map { |k,v| "#{t*(i+1)}/ #{k}=#{v}" }).join("\n")}
+        |#{(@actions.map { |a| "#{t*(i+1)}#{a.to_s(i+1)}" }).join("\n")}
         |#{(@keys.map   { |k,v| "#{t*(i+1)}#{k}=#{v}" }).join("\n")}
         |#{(@macros.map { |m| "#{t*(i+1)}#{m}" }).join("\n")}
         |#{(@subs.map   { |s| "#{s.to_s(i+1)}" }).join("\n")}

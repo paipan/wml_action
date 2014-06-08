@@ -211,6 +211,29 @@ module WmlAction
         EOS
       end
 
+      it 'prints filters' do
+        s << ActionSection::Filter[:hp,25]
+        s << ActionSection::Filter[:race,'human']
+        expect(s.to_s).to eq <<-EOS.gsub(/^\s+\|/, '')
+        |[unit]
+        |\t/ hp=25
+        |\t/ race=human
+        |[/unit]
+        EOS
+      end
+
+      it 'prints actions' do
+        s << ActionSection::Action[ActionSection.new(name: 'attack'),'+']
+        s << ActionSection::Action[ActionSection::Macro['{REGENERATES}'],'-']
+        expect(s.to_s).to eq <<-EOS.gsub(/^\s+\|/, '')
+        |[unit]
+        |\t+ [attack]
+        |\t[/attack]
+        |\t- {REGENERATES}
+        |[/unit]
+        EOS
+      end
+
     end
 
 

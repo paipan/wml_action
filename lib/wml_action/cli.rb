@@ -47,7 +47,7 @@ module WmlAction
             log.level=Logger::INFO if options[:verbose]
             log.level=Logger::DEBUG if options[:debug]
             d=ActionDocument.from_file(filename)
-            print d.root.dumpSection
+            print d.root.to_s
         end
 
     end
