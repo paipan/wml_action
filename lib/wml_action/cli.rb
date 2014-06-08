@@ -26,7 +26,7 @@ module WmlAction
                     exit
             end
 
-            target=Document.from_file(target_name)
+            target=ActionDocument.from_file(target_name)
             modlist=ActionDocument.from_file(modlist_name)
 
             modlist.root.applyActionSection(target.root)
@@ -38,8 +38,8 @@ module WmlAction
         def read(filename)
             log.level=Logger::INFO if options[:verbose]
             log.level=Logger::DEBUG if options[:debug]
-            d=Document.from_file(filename)
-            print d.root.dumpSection
+            d=ActionDocument.from_file(filename)
+            print d.root.to_s
         end
 
         desc "action_read FILE", "Reads and outputs an action wml"

@@ -7,8 +7,6 @@ module WmlAction
 
     attr_accessor :name,:subs,:keys,:macros,:filter, :actions
 
-    @@tab_counter=-1
-
     Attribute = Struct.new(:name, :value) do
       def to_s(indent=0)
         "#{name}=#{value}"
@@ -73,33 +71,6 @@ module WmlAction
       EOS
     end
 
-    def dumpSection
-      text=String.new
-      text+="\t"*@@tab_counter if @@tab_counter >= 0
-      text+="[#{@name}]\n" if @name != "Global"
-      @filter.each do |filter|
-        text+="\t"*(@@tab_counter+1) if @@tab_counter >= 0
-        text+="/ " + filter.to_a.join("=") + "\n"
-      end
-      @keys.each do |key|
-        text+="\t"*(@@tab_counter+1) if @@tab_counter >= 0
-        text+=key[:action] + " #{key[:value].to_a.join("=")}\n"
-      end
-      @macros.each do |macro|
-        text+="\t"*(@@tab_counter+1) if @@tab_counter >= 0
-        text+=macro[:action] + " #{macro[:value]}\n"
-      end
-      @subs.each do |sub|
-        text+=sub[:action] + " "
-        @@tab_counter+=1
-        text+=sub[:value].dumpSection
-      end
-      text+="\t"*@@tab_counter if @@tab_counter >= 0
-      text+=("[/#{@name}]\n") if @name != "Global"
-      @@tab_counter-=1
-      return text
-    end
-
     def applyActionSection(section)
       return if @name != section.name
       if not @filter.empty? then
@@ -130,7 +101,6 @@ module WmlAction
         end
       end
     end
-
 
     def delete(section,content)
       case content
