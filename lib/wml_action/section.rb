@@ -73,41 +73,35 @@ module WMLAction
       EOS
     end
 
-    def applySection(section)
-      return if @name != section.name
-      if not @filter.empty? then
-        @filter.each_key do |key|
-          return if not section.keys.has_key?(key)
-          return if section.keys[key] != @filter[key]
-        end
-      end
-      log.info"Applying [#{@name}] section to [#{section.name}] with filter: #{@filter.to_a.join('=')}" 
-      @keys.each_pair do |key,value|
+    def merge(other)
+      return self unless @name == other.name
+      return self unless match?( other.filter )
+      log.info "Merging [#{@name}] section with [#{other.name}] with filter: #{other.filter}"
+      other.keys.each_pair do |key,value|
         log.debug "Processing key: #{key}=#{value}"
-        section.keys.store(key,value)
+        @keys.store(key,value)
       end
-      @macros.each do |macro|
+      other.macros.each do |macro|
         log.debug "Adding macro: #{macro}"
-        section.macros<<(macro)
+        @macros<<(macro)
       end
-      @subs.each do |act_sub|
-        section.subs.each do |sub|
-          act_sub.applySection(sub)
-        end
+      other.subs.each do |other_sub|
+        @subs.map { |sub| sub.merge(other_sub) }
       end
-      @actions.each do |a|
+      other.actions.each do |a|
         case a.action
-        when '+' then section << a.object.clone
-        when '-' then delete( section, a.object )
-        else raise NoMethodError.new("Don't know how to do#{a.action}")
+        when '+' then self << a.object
+        when '-' then delete( a.object )
+        else raise NoMethodError.new("Don't know what to do with #{a.action} action")
         end
       end
+      return self
     end
 
-    def delete(section,content)
+    def delete(content)
       case content
-      when Section then section.subs.delete_if { |s| s.match?( content.filter ) }
-      when Macro then section.macros.delete(content.value)
+      when Section then @subs.delete_if { |s| content.name == s.name && s.match?( content.filter ) }
+      when Macro then @macros.delete(content.value)
       end
     end
 
@@ -115,7 +109,7 @@ module WMLAction
       return true if filter.empty?
       filter.each_key do |key|
         return false unless @keys.key?(key)
-        return false if @keys[key] != @filter[key]
+        return false if @keys[key] != filter[key]
       end
       return true
     end

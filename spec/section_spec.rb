@@ -5,7 +5,7 @@ module WMLAction
 
   describe Section do
 
-    describe '#applySection' do
+    describe '#merge' do
 
       context 'when no action' do
 
@@ -19,7 +19,6 @@ module WMLAction
           sub = Section.new(name: 'resists')
           sub << Section::Attribute[:cold,100]
           a << sub
-          a
         end
 
         let(:target) do
@@ -27,8 +26,7 @@ module WMLAction
           t << Section::Attribute[:hp,10]
           t << Section.new(name: 'attack')
           t << Section.new(name: 'attack')
-          actions.applySection(t)
-          t
+          t.merge(actions)
         end
 
         it 'adds an attribute' do
@@ -71,8 +69,7 @@ module WMLAction
         let(:target) do
           t = Section.new
           t << Section.new(name: 'attack')
-          actions.applySection(t)
-          t
+          t.merge(actions)
         end
 
         it 'adds (existing) sections' do
@@ -97,15 +94,13 @@ module WMLAction
           sub = Section.new(name: 'attack')
           a << Section::Action[sub,'-']
           a << Section::Action[Section::Macro['{REGENERATE}'], '-']
-          a
         end
 
         let(:target) do
           t = Section.new
           t << Section.new(name: 'attack')
           t << Section::Macro['{REGENERATE}']
-          actions.applySection(t)
-          t
+          t.merge(actions)
         end
 
         it 'removes section' do
@@ -125,7 +120,6 @@ module WMLAction
           sub << Section::Filter[:type,'blunt']
           sub << Section::Attribute[:damage, 30]
           a << sub
-          a
         end
 
         let(:target) do
@@ -138,8 +132,7 @@ module WMLAction
           sub << Section::Attribute[:type,'pierce']
           sub << Section::Attribute[:damage, 25]
           t << sub
-          actions.applySection(t)
-          t
+          t.merge(actions)
         end
 
         it 'modifies matching section' do

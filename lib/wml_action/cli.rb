@@ -29,7 +29,7 @@ module WMLAction
             target=Document.from_file(target_name)
             modlist=Document.from_file(modlist_name)
 
-            modlist.root.applySection(target.root)
+            target.root.merge(modlist.root)
             print target.root.to_s
 
         end
