@@ -5,7 +5,7 @@ require 'wml_action/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "wml_action"
-  spec.version       = WmlAction::VERSION
+  spec.version       = WMLAction::VERSION
   spec.authors       = ["Pancho"]
   spec.email         = ["paul.schko@gmail.com"]
   spec.description   = %q{Parse wml and wml action files}

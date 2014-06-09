@@ -1,4 +1,5 @@
 require "wml_action/section"
+require "wml_action/parser.tab"
 
 module WMLAction
 
