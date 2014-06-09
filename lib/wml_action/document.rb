@@ -11,7 +11,7 @@ module WMLAction
     end
 
     def self.from_file(filename)
-      root = WMLParser.new.parse_file(filename)
+      root = Parser.new.parse_file(filename)
       #TODO file exceptions
       Document.new(root)
     end

@@ -3,7 +3,7 @@ require "racc/parser"
 
 module WMLAction
 
-class WMLParser < Racc::Parser
+class Parser < Racc::Parser
 
 options
     #debug

@@ -14,7 +14,7 @@ require 'wml_action/section'
 require 'wml_action/log'
 
 module WMLAction
-  class WMLParser < Racc::Parser
+  class Parser < Racc::Parser
 
 module_eval(<<'...end parser.y/module_eval...', 'parser.y', 49)
 include Log
@@ -308,7 +308,7 @@ def _reduce_none(val, _values, result)
   val[0]
 end
 
-  end   # class WMLParser
+  end   # class Parser
   end   # module WMLAction
 
 
