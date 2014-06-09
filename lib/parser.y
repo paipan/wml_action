@@ -1,4 +1,4 @@
-class WmlAction::WmlParser
+class WMLAction::WMLParser
 rule
     target      : /* nothing */
                 | wml_doc { log.debug "Found a target" }

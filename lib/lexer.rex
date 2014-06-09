@@ -1,9 +1,9 @@
 
 require "racc/parser"
 
-module WmlAction
+module WMLAction
 
-class WmlParser < Racc::Parser
+class WMLParser < Racc::Parser
 
 options
     #debug

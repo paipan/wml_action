@@ -1,9 +1,9 @@
 require "wml_action"
 require "debugger"
 
-module WmlAction
+module WMLAction
 
-  describe WmlAction::Document do
+  describe Document do
 
     it 'should read a tag' do
       d = Document.from_file('spec/fixtures/tag.cfg')

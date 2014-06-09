@@ -22,6 +22,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake"
   spec.add_development_dependency "rspec"
   spec.add_development_dependency "debugger"
+  spec.add_development_dependency "ruby-prof"
 
   spec.add_development_dependency "racc"
   spec.add_development_dependency "oedipus_lex"

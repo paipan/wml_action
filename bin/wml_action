@@ -2,4 +2,4 @@
 
 require 'wml_action'
 
-WmlAction::CLI.start
+WMLAction::CLI.start

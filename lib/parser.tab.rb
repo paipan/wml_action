@@ -13,8 +13,8 @@ require 'lexer.rex'
 require 'wml_action/section'
 require 'wml_action/log'
 
-module WmlAction
-  class WmlParser < Racc::Parser
+module WMLAction
+  class WMLParser < Racc::Parser
 
 module_eval(<<'...end parser.y/module_eval...', 'parser.y', 49)
 include Log
@@ -308,7 +308,7 @@ def _reduce_none(val, _values, result)
   val[0]
 end
 
-  end   # class WmlParser
-  end   # module WmlAction
+  end   # class WMLParser
+  end   # module WMLAction
 
 

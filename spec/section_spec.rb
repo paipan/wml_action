@@ -1,7 +1,7 @@
 require 'wml_action'
 require 'debugger'
 
-module WmlAction
+module WMLAction
 
   describe Section do
 

@@ -1,7 +1,7 @@
 require 'thor'
 require 'wml_action'
 
-module WmlAction
+module WMLAction
 
     class CLI < Thor
       include Log

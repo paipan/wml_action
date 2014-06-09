@@ -1,6 +1,6 @@
 require 'logger'
 
-module WmlAction
+module WMLAction
 
   module Log
     @@log ||= Logger.new(STDERR)

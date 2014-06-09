@@ -5,5 +5,5 @@ require "wml_action/document"
 require "parser.tab"
 require 'wml_action/log'
 
-module WmlAction
+module WMLAction
 end

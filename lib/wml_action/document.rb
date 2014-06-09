@@ -1,6 +1,6 @@
 require "wml_action/section"
 
-module WmlAction
+module WMLAction
 
   class Document
 
@@ -11,7 +11,7 @@ module WmlAction
     end
 
     def self.from_file(filename)
-      root = WmlParser.new.parse_file(filename)
+      root = WMLParser.new.parse_file(filename)
       #TODO file exceptions
       Document.new(root)
     end

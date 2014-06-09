@@ -1,7 +1,7 @@
 require 'wml_action/log'
 require 'set'
 
-module WmlAction
+module WMLAction
   class Section
     include Log
 
@@ -18,12 +18,14 @@ module WmlAction
         value.to_s
       end
     end
+
     Action = Struct.new(:object, :action) do
       def to_s(indent=0)
         "#{action} #{object.to_s(indent,0)}"
       end
     end
-    # TODO Filter should be using Set
+
+    # TODO Filter should be using Set or Array
     Filter = Struct.new(:name, :value) do
       def to_s(indent=0)
         "/ #{name}=#{value}"
@@ -42,11 +44,11 @@ module WmlAction
 
     def <<(content)
       case content
-      when WmlAction::Section::Action then @actions<<content
-      when WmlAction::Section::Attribute then @keys.merge!( Hash[*content] )
-      when WmlAction::Section::Macro then @macros.add( content.value )
-      when WmlAction::Section::Filter then @filter.merge!( Hash[*content] )
-      when WmlAction::Section then @subs.push(content)
+      when Action then @actions<<content
+      when Attribute then @keys.merge!( Hash[*content] )
+      when Macro then @macros.add( content.value )
+      when Filter then @filter.merge!( Hash[*content] )
+      when Section then @subs.push(content)
       else raise TypeError.new("Can not add #{content.class}: #{content} to a Section")
       end
       return self
@@ -79,7 +81,7 @@ module WmlAction
           return if section.keys[key] != @filter[key]
         end
       end
-      log.info"Applying [#{@name}] action section to [#{section.name}] with filter: #{@filter.to_a.join('=')}" 
+      log.info"Applying [#{@name}] section to [#{section.name}] with filter: #{@filter.to_a.join('=')}" 
       @keys.each_pair do |key,value|
         log.debug "Processing key: #{key}=#{value}"
         section.keys.store(key,value)
