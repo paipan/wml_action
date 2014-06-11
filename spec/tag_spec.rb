@@ -3,40 +3,40 @@ require 'debugger'
 
 module WMLAction
 
-  describe Section do
+  describe Tag do
 
     describe '#merge' do
 
       context 'when no action' do
 
         let(:actions) do
-          a = Section.new
-          a << Section::Attribute[:hp,25]
-          a << Section::Macro['{REGENERATE}']
-          sub = Section.new(name: 'attack')
-          sub << Section::Attribute[:type,'blunt']
+          a = Tag.new
+          a << Tag::Attribute[:hp,25]
+          a << Tag::Macro['{REGENERATE}']
+          sub = Tag.new(name: 'attack')
+          sub << Tag::Attribute[:type,'blunt']
           a << sub
-          sub = Section.new(name: 'resists')
-          sub << Section::Attribute[:cold,100]
+          sub = Tag.new(name: 'resists')
+          sub << Tag::Attribute[:cold,100]
           a << sub
         end
 
         let(:target) do
-          t = Section.new
-          t << Section::Attribute[:hp,10]
-          t << Section.new(name: 'attack')
-          t << Section.new(name: 'attack')
+          t = Tag.new
+          t << Tag::Attribute[:hp,10]
+          t << Tag.new(name: 'attack')
+          t << Tag.new(name: 'attack')
           t.merge(actions)
         end
 
         it 'adds an attribute' do
-          expect(target.keys).to include :hp
+          expect(target.attrs).to include :hp
         end
 
         it 'merges existing sections' do
           # TODO Should it works through check receiving messages?
-          expect(target.subs[0].keys).to include :type
-          expect(target.subs[1].keys).to include :type
+          expect(target.subs[0].attrs).to include :type
+          expect(target.subs[1].attrs).to include :type
         end
 
         it 'ignores new sections' do
@@ -48,7 +48,7 @@ module WMLAction
         end
 
         it 'change an existing attribute' do
-          expect(target.keys[:hp]).to eq 25
+          expect(target.attrs[:hp]).to eq 25
         end
 
       end
@@ -56,19 +56,19 @@ module WMLAction
       context 'when + action' do
 
         let(:actions) do
-          a = Section.new
-          sub = Section.new(name: 'attack')
-          sub << Section::Attribute[:type,'blunt']
-          a << Section::Action[sub, '+']
-          sub = Section.new(name: 'resists')
-          a << Section::Action[sub, '+']
-          a << Section::Action[Section::Macro['{REGENERATE}'], '+']
+          a = Tag.new
+          sub = Tag.new(name: 'attack')
+          sub << Tag::Attribute[:type,'blunt']
+          a << Tag::Action[sub, '+']
+          sub = Tag.new(name: 'resists')
+          a << Tag::Action[sub, '+']
+          a << Tag::Action[Tag::Macro['{REGENERATE}'], '+']
           a
         end
 
         let(:target) do
-          t = Section.new
-          t << Section.new(name: 'attack')
+          t = Tag.new
+          t << Tag.new(name: 'attack')
           t.merge(actions)
         end
 
@@ -90,16 +90,16 @@ module WMLAction
       context 'when - action' do
 
         let(:actions) do
-          a = Section.new
-          sub = Section.new(name: 'attack')
-          a << Section::Action[sub,'-']
-          a << Section::Action[Section::Macro['{REGENERATE}'], '-']
+          a = Tag.new
+          sub = Tag.new(name: 'attack')
+          a << Tag::Action[sub,'-']
+          a << Tag::Action[Tag::Macro['{REGENERATE}'], '-']
         end
 
         let(:target) do
-          t = Section.new
-          t << Section.new(name: 'attack')
-          t << Section::Macro['{REGENERATE}']
+          t = Tag.new
+          t << Tag.new(name: 'attack')
+          t << Tag::Macro['{REGENERATE}']
           t.merge(actions)
         end
 
@@ -115,32 +115,32 @@ module WMLAction
 
       context 'when filtered section' do
         let(:actions) do
-          a = Section.new
-          sub = Section.new(name: 'attack')
-          sub << Section::Filter[:type,'blunt']
-          sub << Section::Attribute[:damage, 30]
+          a = Tag.new
+          sub = Tag.new(name: 'attack')
+          sub << Tag::Filter[:type,'blunt']
+          sub << Tag::Attribute[:damage, 30]
           a << sub
         end
 
         let(:target) do
-          t = Section.new
-          sub = Section.new(name: 'attack')
-          sub << Section::Attribute[:type,'blunt']
-          sub << Section::Attribute[:damage, 25]
+          t = Tag.new
+          sub = Tag.new(name: 'attack')
+          sub << Tag::Attribute[:type,'blunt']
+          sub << Tag::Attribute[:damage, 25]
           t << sub
-          sub = Section.new(name: 'attack')
-          sub << Section::Attribute[:type,'pierce']
-          sub << Section::Attribute[:damage, 25]
+          sub = Tag.new(name: 'attack')
+          sub << Tag::Attribute[:type,'pierce']
+          sub << Tag::Attribute[:damage, 25]
           t << sub
           t.merge(actions)
         end
 
         it 'modifies matching section' do
-          expect(target.subs[0].keys[:damage]).to eq 30
+          expect(target.subs[0].attrs[:damage]).to eq 30
         end
 
         it 'ignores filtered section' do
-          expect(target.subs[1].keys[:damage]).to eq 25
+          expect(target.subs[1].attrs[:damage]).to eq 25
         end
 
 
@@ -152,8 +152,8 @@ module WMLAction
     describe '#add and #<<' do
 
       it 'returns self' do
-        s = Section.new << Section::Attribute[:hp,25]
-        expect(s).to be_kind_of(Section)
+        s = Tag.new << Tag::Attribute[:hp,25]
+        expect(s).to be_kind_of(Tag)
       end
 
     end
@@ -163,15 +163,15 @@ module WMLAction
     end
 
     describe '#to_s' do
-      let(:s) { Section.new(name: 'unit') }
+      let(:s) { Tag.new(name: 'unit') }
 
       it 'prints tags for section' do
         expect(s.to_s).to eq "[unit]\n[/unit]\n"
       end
 
       it 'prints attributes' do
-        s << Section::Attribute[:hp,25]
-        s << Section::Attribute[:race,'human']
+        s << Tag::Attribute[:hp,25]
+        s << Tag::Attribute[:race,'human']
         expect(s.to_s).to eq <<-EOS.gsub(/^\s+\|/, '')
         |[unit]
         |\thp=25
@@ -181,8 +181,8 @@ module WMLAction
       end
 
       it 'prints macros' do
-        s << Section::Macro['{REGENERATES}']
-        s << Section::Macro['{INVISIBLE}']
+        s << Tag::Macro['{REGENERATES}']
+        s << Tag::Macro['{INVISIBLE}']
         expect(s.to_s).to eq <<-EOS.gsub(/^\s+\|/, '')
         |[unit]
         |\t{REGENERATES}
@@ -192,8 +192,8 @@ module WMLAction
       end
 
       it 'prints sections' do
-        s << Section.new(name: 'attack')
-        s << Section.new(name: 'resists')
+        s << Tag.new(name: 'attack')
+        s << Tag.new(name: 'resists')
         expect(s.to_s).to eq <<-EOS.gsub(/^\s+\|/, '')
         |[unit]
         |\t[attack]
@@ -205,8 +205,8 @@ module WMLAction
       end
 
       it 'prints filters' do
-        s << Section::Filter[:hp,25]
-        s << Section::Filter[:race,'human']
+        s << Tag::Filter[:hp,25]
+        s << Tag::Filter[:race,'human']
         expect(s.to_s).to eq <<-EOS.gsub(/^\s+\|/, '')
         |[unit]
         |\t/ hp=25
@@ -216,8 +216,8 @@ module WMLAction
       end
 
       it 'prints actions' do
-        s << Section::Action[Section.new(name: 'attack'),'+']
-        s << Section::Action[Section::Macro['{REGENERATES}'],'-']
+        s << Tag::Action[Tag.new(name: 'attack'),'+']
+        s << Tag::Action[Tag::Macro['{REGENERATES}'],'-']
         expect(s.to_s).to eq <<-EOS.gsub(/^\s+\|/, '')
         |[unit]
         |\t+ [attack]

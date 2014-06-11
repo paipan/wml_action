@@ -1,4 +1,4 @@
-require "wml_action/section"
+require "wml_action/tag"
 require "wml_action/parser.tab"
 
 module WMLAction
@@ -7,8 +7,8 @@ module WMLAction
 
     attr_reader :root
 
-    def initialize(root_section)
-      @root = root_section
+    def initialize(root)
+      @root = root
     end
 
     def self.from_file(filename)

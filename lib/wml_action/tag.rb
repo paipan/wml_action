@@ -2,10 +2,10 @@ require 'wml_action/log'
 require 'set'
 
 module WMLAction
-  class Section
+  class Tag
     include Log
 
-    attr_accessor :name,:subs,:keys,:macros,:filter, :actions
+    attr_accessor :name,:subs,:attrs,:macros,:filter, :actions
 
     Attribute = Struct.new(:name, :value) do
       def to_s(indent=0)
@@ -35,7 +35,7 @@ module WMLAction
     def initialize(values={})
       @name=values[:name]||""
       @subs=values[:subs]||Array.new
-      @keys=values[:keys]||Hash.new
+      @attrs=values[:attrs]||Hash.new
       @macros=values[:macros]||Set.new
       @filter=values[:filter]||Hash.new
       @actions=values[:actions]||Array.new
@@ -45,11 +45,11 @@ module WMLAction
     def <<(content)
       case content
       when Action then @actions<<content
-      when Attribute then @keys.merge!( Hash[*content] )
+      when Attribute then @attrs.merge!( Hash[*content] )
       when Macro then @macros.add( content.value )
       when Filter then @filter.merge!( Hash[*content] )
-      when Section then @subs.push(content)
-      else raise TypeError.new("Can not add #{content.class}: #{content} to a Section")
+      when Tag then @subs.push(content)
+      else raise TypeError.new("Can not add #{content.class}: #{content} to a Tag")
       end
       return self
     end
@@ -66,7 +66,7 @@ module WMLAction
         |#{t*i*ifl}[#{@name}]
         |#{(@filter.map { |k,v| "#{t*(i+1)}/ #{k}=#{v}" }).join("\n")}
         |#{(@actions.map { |a| "#{t*(i+1)}#{a.to_s(i+1)}" }).join("\n")}
-        |#{(@keys.map   { |k,v| "#{t*(i+1)}#{k}=#{v}" }).join("\n")}
+        |#{(@attrs.map   { |k,v| "#{t*(i+1)}#{k}=#{v}" }).join("\n")}
         |#{(@macros.map { |m| "#{t*(i+1)}#{m}" }).join("\n")}
         |#{(@subs.map   { |s| "#{s.to_s(i+1)}" }).join("\n")}
         |#{t*i}[/#{@name}]
@@ -77,9 +77,9 @@ module WMLAction
       return self unless @name == other.name
       return self unless match?( other.filter )
       log.info "Merging [#{@name}] section with [#{other.name}] with filter: #{other.filter}"
-      other.keys.each_pair do |key,value|
+      other.attrs.each_pair do |key,value|
         log.debug "Processing key: #{key}=#{value}"
-        @keys.store(key,value)
+        @attrs.store(key,value)
       end
       other.macros.each do |macro|
         log.debug "Adding macro: #{macro}"
@@ -100,7 +100,7 @@ module WMLAction
 
     def delete(content)
       case content
-      when Section then @subs.delete_if { |s| content.name == s.name && s.match?( content.filter ) }
+      when Tag then @subs.delete_if { |s| content.name == s.name && s.match?( content.filter ) }
       when Macro then @macros.delete(content.value)
       end
     end
@@ -108,10 +108,30 @@ module WMLAction
     def match?( filter )
       return true if filter.empty?
       filter.each_key do |key|
-        return false unless @keys.key?(key)
-        return false if @keys[key] != filter[key]
+        return false unless @attrs.key?(key)
+        return false if @attrs[key] != filter[key]
       end
       return true
+    end
+
+    def attr?( attr )
+      @attrs.key?(attr.name)
+    end
+
+    def macro?( macro )
+      @macros.include?(macro.value)
+    end
+
+    def sub?( sub )
+      ( @subs.keep_if { |s| s.name == sub.name && s.match?(sub.filter) } ).empty?
+    end
+
+    def filter?(filter)
+      @filter.include?(filter)
+    end
+
+    def action?(action)
+      @actions.include?(action)
     end
 
   end

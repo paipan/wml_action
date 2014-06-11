@@ -22,31 +22,31 @@ module WMLAction
     it "should read atributes" do
       d = Document.from_file('spec/fixtures/attributes.cfg')
       s = d.root
-      expect(s.keys.length).to eq 5
-      expect(s.keys).to include "number"
-      expect(s.keys["number"]).to eq 50
-      expect(s.keys).to include "plain"
-      expect(s.keys["plain"]).to eq "One, Another"
-      expect(s.keys).to include "macrosed"
-      expect(s.keys["macrosed"]).to eq "{AMACRO}"
-      expect(s.keys).to include "likedigit"
-      expect(s.keys["likedigit"]).to eq '0.1:0.2'
-      expect(s.keys).to include "empty"
-      expect(s.keys["empty"]).to eq ''
+      expect(s.attrs.length).to eq 5
+      expect(s.attrs).to include "number"
+      expect(s.attrs["number"]).to eq 50
+      expect(s.attrs).to include "plain"
+      expect(s.attrs["plain"]).to eq "One, Another"
+      expect(s.attrs).to include "macrosed"
+      expect(s.attrs["macrosed"]).to eq "{AMACRO}"
+      expect(s.attrs).to include "likedigit"
+      expect(s.attrs["likedigit"]).to eq '0.1:0.2'
+      expect(s.attrs).to include "empty"
+      expect(s.attrs["empty"]).to eq ''
     end
 
     it "should read string attributes" do
       d = Document.from_file('spec/fixtures/strings.cfg')
       s = d.root
-      expect(s.keys.length).to eq 5
-      expect(s.keys).to include "simple"
-      expect(s.keys).to include "underscored"
-      expect(s.keys).to include "multiline"
-      expect(s.keys).to include "macrosed"
-      expect(s.keys["simple"]).to eq ' "Hello"'
-      expect(s.keys["underscored"]).to eq ' _ "Long Hello"'
-      expect(s.keys["multiline"]).to eq  " \"This is \nvery long\nlong string\""
-      expect(s.keys["macrosed"]).to eq " \"This amount\"+{AMOUNT}"
+      expect(s.attrs.length).to eq 5
+      expect(s.attrs).to include "simple"
+      expect(s.attrs).to include "underscored"
+      expect(s.attrs).to include "multiline"
+      expect(s.attrs).to include "macrosed"
+      expect(s.attrs["simple"]).to eq ' "Hello"'
+      expect(s.attrs["underscored"]).to eq ' _ "Long Hello"'
+      expect(s.attrs["multiline"]).to eq  " \"This is \nvery long\nlong string\""
+      expect(s.attrs["macrosed"]).to eq " \"This amount\"+{AMOUNT}"
     end
 
     it "should read macros" do
@@ -68,8 +68,8 @@ module WMLAction
       d = Document.from_file('spec/fixtures/actions.cfg')
       s = d.root
       expect(s.actions.length).to eq 4
-      expect(s.actions).to include Section::Action[Section::Macro['{VARIABLES}'],'+']
-      expect(s.actions).to include Section::Action[Section::Macro['{ABILITIES}'],'-']
+      expect(s.actions).to include Tag::Action[Tag::Macro['{VARIABLES}'],'+']
+      expect(s.actions).to include Tag::Action[Tag::Macro['{ABILITIES}'],'-']
       expect(s.actions[2].action).to eq "+"
       expect(s.actions[2].object.name).to eq "attack"
       expect(s.actions[3].action).to eq "-"
