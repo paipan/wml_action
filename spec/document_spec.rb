@@ -59,9 +59,8 @@ module WMLAction
       d = Document.from_file('spec/fixtures/filter.cfg')
       s = d.root
       expect(s.filter.length).to eq 2
-      expect(s.filter).to include "type"
-      expect(s.filter["type"]).to eq "flying"
-      expect(s.filter).to include "{FIRST_STRIKE}"
+      expect(s.filter[0]).to eq Tag::Attribute['type','flying']
+      expect(s.filter[1]).to eq Tag::Macro['{FIRST_STRIKE}']
     end
 
     it "should read actions" do

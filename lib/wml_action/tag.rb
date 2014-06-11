@@ -8,27 +8,27 @@ module WMLAction
     attr_accessor :name,:subs,:attrs,:macros,:filter, :actions
 
     Attribute = Struct.new(:name, :value) do
-      def to_s(indent=0)
+      def to_s(indent=0, dummy=0)
         "#{name}=#{value}"
       end
     end
 
     Macro = Struct.new(:value) do
-      def to_s(indent=0,dummy=0)
+      def to_s(indent=0, dummy=0)
         value.to_s
       end
     end
 
     Action = Struct.new(:object, :action) do
-      def to_s(indent=0)
+      def to_s(indent=0, dummy=0)
         "#{action} #{object.to_s(indent,0)}"
       end
     end
 
     # TODO Filter should be using Set or Array
-    Filter = Struct.new(:name, :value) do
-      def to_s(indent=0)
-        "/ #{name}=#{value}"
+    Filter = Struct.new(:value) do
+      def to_s(indent=0, dummy=0)
+        "/ #{ value }"
       end
     end
 
@@ -37,18 +37,18 @@ module WMLAction
       @subs=values[:subs]||Array.new
       @attrs=values[:attrs]||Hash.new
       @macros=values[:macros]||Set.new
-      @filter=values[:filter]||Hash.new
+      @filter=values[:filter]||Array.new
       @actions=values[:actions]||Array.new
       load_content( values[:content] ) if values.key? :content
     end
 
     def <<(content)
       case content
-      when Action then @actions<<content
+      when Action then @actions << content
       when Attribute then @attrs.merge!( Hash[*content] )
       when Macro then @macros.add( content.value )
-      when Filter then @filter.merge!( Hash[*content] )
-      when Tag then @subs.push(content)
+      when Filter then @filter << content.value
+      when Tag then @subs << content
       else raise TypeError.new("Can not add #{content.class}: #{content} to a Tag")
       end
       return self
@@ -64,7 +64,7 @@ module WMLAction
       ifl=indent_first_line
       return <<-EOS.gsub(/^\s+\|/, '').gsub(/^$\n/,'')
         |#{t*i*ifl}[#{@name}]
-        |#{(@filter.map { |k,v| "#{t*(i+1)}/ #{k}=#{v}" }).join("\n")}
+        |#{(@filter.map { |f| "#{t*(i+1)}/ #{f}" }).join("\n")}
         |#{(@actions.map { |a| "#{t*(i+1)}#{a.to_s(i+1)}" }).join("\n")}
         |#{(@attrs.map   { |k,v| "#{t*(i+1)}#{k}=#{v}" }).join("\n")}
         |#{(@macros.map { |m| "#{t*(i+1)}#{m}" }).join("\n")}
@@ -107,11 +107,17 @@ module WMLAction
 
     def match?( filter )
       return true if filter.empty?
-      filter.each_key do |key|
-        return false unless @attrs.key?(key)
-        return false if @attrs[key] != filter[key]
+      filter.each do |f|
+        case f
+        when Attribute then return false unless attr_value?( f )
+        when Macro then return false unless macro?( f )
+        end
       end
       return true
+    end
+
+    def attr_value?( attr )
+      @attrs[attr.name] == attr.value
     end
 
     def attr?( attr )

@@ -292,14 +292,14 @@ module_eval(<<'.,.,', 'parser.y', 32)
 
 module_eval(<<'.,.,', 'parser.y', 34)
   def _reduce_24(val, _values, result)
-     log.debug "Found an attribute filter #{val[1]}"; return Tag::Filter[*val[1]] 
+     log.debug "Found an attribute filter #{val[1]}"; return Tag::Filter[val[1]] 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.y', 35)
   def _reduce_25(val, _values, result)
-     log.debug "Found a macro filter #{val[1]}"; return Tag::Filter[val[1],true] 
+     log.debug "Found a macro filter #{val[1]}"; return Tag::Filter[Tag::Macro[val[1]]] 
     result
   end
 .,.,

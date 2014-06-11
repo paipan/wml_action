@@ -117,7 +117,7 @@ module WMLAction
         let(:actions) do
           a = Tag.new
           sub = Tag.new(name: 'attack')
-          sub << Tag::Filter[:type,'blunt']
+          sub << Tag::Filter[Tag::Attribute[:type,'blunt']]
           sub << Tag::Attribute[:damage, 30]
           a << sub
         end
@@ -205,12 +205,12 @@ module WMLAction
       end
 
       it 'prints filters' do
-        s << Tag::Filter[:hp,25]
-        s << Tag::Filter[:race,'human']
+        s << Tag::Filter[Tag::Attribute[:hp,25]]
+        s << Tag::Filter[Tag::Macro['{REGENERATES}']]
         expect(s.to_s).to eq <<-EOS.gsub(/^\s+\|/, '')
         |[unit]
         |\t/ hp=25
-        |\t/ race=human
+        |\t/ {REGENERATES}
         |[/unit]
         EOS
       end

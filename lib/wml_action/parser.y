@@ -32,8 +32,8 @@ rule
                 | UNDERSC ASTR { return " "+val[0]+" "+val[1] }
                 | string_val '+' MACRO { return val[0] + "+" + val[2] }
 
-    filter      : SLASH attribute { log.debug "Found an attribute filter #{val[1]}"; return Tag::Filter[*val[1]] }
-                | SLASH MACRO { log.debug "Found a macro filter #{val[1]}"; return Tag::Filter[val[1],true] }
+    filter      : SLASH attribute { log.debug "Found an attribute filter #{val[1]}"; return Tag::Filter[val[1]] }
+                | SLASH MACRO { log.debug "Found a macro filter #{val[1]}"; return Tag::Filter[Tag::Macro[val[1]]] }
 
 end
 
