@@ -25,7 +25,6 @@ module WMLAction
       end
     end
 
-    # TODO Filter should be using Set or Array
     Filter = Struct.new(:value) do
       def to_s(indent=0, dummy=0)
         "/ #{ value }"
