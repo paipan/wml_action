@@ -12,9 +12,9 @@ macro
     OTAG    /\[(\w+)\]/
     CTAG    /\[\/(\w+)\]/
     ATTR    /(\w+)=/
+    MACRO   /\{.+\}/
     ANUMBER /-?\d+/
     ASTR    /"[^"]*"/
-    MACRO   /\{.+\}/
     APLAIN  /.+/
     SLASH   /\//
     COMMENT /\#.*$/
@@ -36,9 +36,9 @@ rule
     :INATTR /#{BLANK}/
     :INATTR /#{ANUMBER}\s+/     { @state = nil; [:ANUMBER, text.to_i] }
     :INATTR /#{ASTR}/           { [:ASTR, text] }
-    :INATTR /#{MACRO}/          { [:MACRO, text] }
+    :INATTR /#{MACRO}/          { [:AMACRO, text] }
     :INATTR /_/                 { [:UNDERSC, text] }
-    :INATTR /\+/                { [text,text] }
+    :INATTR /\+/                { [:APLUS, text] }
     :INATTR /#{APLAIN}/         { [:APLAIN, text] }
 
             /./

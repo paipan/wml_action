@@ -15,9 +15,9 @@ class Parser < Racc::Parser
   OTAG    = /\[(\w+)\]/
   CTAG    = /\[\/(\w+)\]/
   ATTR    = /(\w+)=/
+  MACRO   = /\{.+\}/
   ANUMBER = /-?\d+/
   ASTR    = /"[^"]*"/
-  MACRO   = /\{.+\}/
   APLAIN  = /.+/
   SLASH   = /\//
   COMMENT = /\#.*$/
@@ -105,11 +105,11 @@ class Parser < Racc::Parser
           when text = ss.scan(/#{ASTR}/) then
             action { [:ASTR, text] }
           when text = ss.scan(/#{MACRO}/) then
-            action { [:MACRO, text] }
+            action { [:AMACRO, text] }
           when text = ss.scan(/_/) then
             action { [:UNDERSC, text] }
           when text = ss.scan(/\+/) then
-            action { [text,text] }
+            action { [:APLUS, text] }
           when text = ss.scan(/#{APLAIN}/) then
             action { [:APLAIN, text] }
           else

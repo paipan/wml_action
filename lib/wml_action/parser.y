@@ -1,9 +1,9 @@
 class WMLAction::Parser
 rule
     target      : /* nothing */
-                | wml_doc { log.debug "Found a target" }
+                | wml_doc { log.debug 'Found a target' }
 
-    wml_doc     : tag { log.debug "Found a doc" }
+    wml_doc     : tag { log.debug 'Found a doc' }
 
     tag         : OTAG contents CTAG { log.debug("Creating tag #{val[0]}"); return Tag.new(name: val[0], content: val[1]) }
 
@@ -17,7 +17,7 @@ rule
                 | MACRO    { log.debug "Found a macro #{val[0]}"; return Tag::Macro[val[0]] }
 
     action      : aop tag { log.debug "Found a action tag #{val[0]}:#{val[1]}"; return Tag::Action[val[1],val[0]] }
-                | aop MACRO { log.debug "Found a action macro #{val[0]}:#{val[1]}"; return Tag::Action[Tag::Macro[val[1]],val[0]] }
+                | aop MACRO { log.debug "Found a action mac #{val[0]}:#{val[1]}"; return Tag::Action[Tag::Macro[val[1]],val[0]] }
 
     aop         : '+'
                 | '-'
@@ -25,12 +25,12 @@ rule
     attribute   : ATTR          { log.debug "Found empty attribute: #{val[0]}"; return Tag::Attribute[val[0],''] }
                 | ATTR APLAIN   { log.debug "Found plain attribute: #{val[0]}:#{val[1]}"; return Tag::Attribute[val[0],val[1]] }
                 | ATTR string_val     { log.debug "Found string attribute: #{val[0]}:#{val[1]}"; return Tag::Attribute[val[0],val[1]] }
-                | ATTR MACRO   { log.debug "Found macro attribute: #{val[0]}:#{val[1]}"; return Tag::Attribute[val[0],val[1]] }
+                | ATTR AMACRO   { log.debug "Found macro attribute: #{val[0]}:#{val[1]}"; return Tag::Attribute[val[0],val[1]] }
                 | ATTR ANUMBER  { log.debug "Found numeric attribute: #{val[0]}:#{val[1]}"; return Tag::Attribute[val[0],val[1]]  }
 
     string_val  : ASTR { return " #{val[0]}" }
-                | UNDERSC ASTR { return " "+val[0]+" "+val[1] }
-                | string_val '+' MACRO { return val[0] + "+" + val[2] }
+                | UNDERSC ASTR { return ' '+val[0]+' '+val[1] }
+                | string_val APLUS AMACRO { return val[0] + '+' + val[2] }
 
     filter      : SLASH attribute { log.debug "Found an attribute filter #{val[1]}"; return Tag::Filter[val[1]] }
                 | SLASH MACRO { log.debug "Found a macro filter #{val[1]}"; return Tag::Filter[Tag::Macro[val[1]]] }

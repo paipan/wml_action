@@ -23,20 +23,20 @@ include Log
 ##### State transition tables begin ###
 
 racc_action_table = [
-     4,     8,    14,    16,    17,    18,    29,    24,     4,    18,
-    19,    22,    25,    26,    27,     4,     7,    21,     5,    30,
+     4,     8,    14,    16,    17,    18,    22,    24,    25,    26,
+    27,    29,    19,     4,    18,    21,     4,     7,     5,    30,
     31,    32 ]
 
 racc_action_check = [
-     6,     6,     6,     6,     6,     6,    19,    18,     0,    19,
-     6,    18,    18,    18,    18,    15,     5,    15,     1,    23,
+     6,     6,     6,     6,     6,     6,    18,    18,    18,    18,
+    18,    19,     6,    15,    19,    15,     0,     5,     1,    23,
     27,    30 ]
 
 racc_action_pointer = [
-     6,    18,   nil,   nil,   nil,    16,    -2,   nil,   nil,   nil,
-   nil,   nil,   nil,   nil,   nil,    13,   nil,   nil,     3,     2,
-   nil,   nil,   nil,    14,   nil,   nil,   nil,    10,   nil,   nil,
-    17,   nil,   nil ]
+    14,    18,   nil,   nil,   nil,    17,    -2,   nil,   nil,   nil,
+   nil,   nil,   nil,   nil,   nil,    11,   nil,   nil,    -2,     7,
+   nil,   nil,   nil,     6,   nil,   nil,   nil,     9,   nil,   nil,
+    12,   nil,   nil ]
 
 racc_action_default = [
     -1,   -26,    -2,    -3,    -5,   -26,   -26,    33,    -4,    -6,
@@ -62,31 +62,31 @@ racc_goto_default = [
 
 racc_reduce_table = [
   0, 0, :racc_error,
-  0, 14, :_reduce_none,
-  1, 14, :_reduce_2,
-  1, 15, :_reduce_3,
-  3, 16, :_reduce_4,
-  0, 17, :_reduce_5,
-  2, 17, :_reduce_6,
-  1, 18, :_reduce_none,
-  1, 18, :_reduce_8,
-  1, 18, :_reduce_none,
-  1, 18, :_reduce_none,
-  1, 18, :_reduce_11,
-  2, 19, :_reduce_12,
-  2, 19, :_reduce_13,
-  1, 22, :_reduce_none,
-  1, 22, :_reduce_none,
-  1, 20, :_reduce_16,
-  2, 20, :_reduce_17,
-  2, 20, :_reduce_18,
-  2, 20, :_reduce_19,
-  2, 20, :_reduce_20,
-  1, 23, :_reduce_21,
-  2, 23, :_reduce_22,
-  3, 23, :_reduce_23,
-  2, 21, :_reduce_24,
-  2, 21, :_reduce_25 ]
+  0, 16, :_reduce_none,
+  1, 16, :_reduce_2,
+  1, 17, :_reduce_3,
+  3, 18, :_reduce_4,
+  0, 19, :_reduce_5,
+  2, 19, :_reduce_6,
+  1, 20, :_reduce_none,
+  1, 20, :_reduce_8,
+  1, 20, :_reduce_none,
+  1, 20, :_reduce_none,
+  1, 20, :_reduce_11,
+  2, 21, :_reduce_12,
+  2, 21, :_reduce_13,
+  1, 24, :_reduce_none,
+  1, 24, :_reduce_none,
+  1, 22, :_reduce_16,
+  2, 22, :_reduce_17,
+  2, 22, :_reduce_18,
+  2, 22, :_reduce_19,
+  2, 22, :_reduce_20,
+  1, 25, :_reduce_21,
+  2, 25, :_reduce_22,
+  3, 25, :_reduce_23,
+  2, 23, :_reduce_24,
+  2, 23, :_reduce_25 ]
 
 racc_reduce_n = 26
 
@@ -102,12 +102,14 @@ racc_token_table = {
   "-" => 6,
   :ATTR => 7,
   :APLAIN => 8,
-  :ANUMBER => 9,
-  :ASTR => 10,
-  :UNDERSC => 11,
-  :SLASH => 12 }
+  :AMACRO => 9,
+  :ANUMBER => 10,
+  :ASTR => 11,
+  :UNDERSC => 12,
+  :APLUS => 13,
+  :SLASH => 14 }
 
-racc_nt_base = 13
+racc_nt_base = 15
 
 racc_use_result_var = true
 
@@ -137,9 +139,11 @@ Racc_token_to_s_table = [
   "\"-\"",
   "ATTR",
   "APLAIN",
+  "AMACRO",
   "ANUMBER",
   "ASTR",
   "UNDERSC",
+  "APLUS",
   "SLASH",
   "$start",
   "target",
@@ -163,14 +167,14 @@ Racc_debug_parser = false
 
 module_eval(<<'.,.,', 'parser.y', 3)
   def _reduce_2(val, _values, result)
-     log.debug "Found a target" 
+     log.debug 'Found a target' 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.y', 5)
   def _reduce_3(val, _values, result)
-     log.debug "Found a doc" 
+     log.debug 'Found a doc' 
     result
   end
 .,.,
@@ -225,7 +229,7 @@ module_eval(<<'.,.,', 'parser.y', 18)
 
 module_eval(<<'.,.,', 'parser.y', 19)
   def _reduce_13(val, _values, result)
-     log.debug "Found a action macro #{val[0]}:#{val[1]}"; return Tag::Action[Tag::Macro[val[1]],val[0]] 
+     log.debug "Found a action mac #{val[0]}:#{val[1]}"; return Tag::Action[Tag::Macro[val[1]],val[0]] 
     result
   end
 .,.,
@@ -278,14 +282,14 @@ module_eval(<<'.,.,', 'parser.y', 30)
 
 module_eval(<<'.,.,', 'parser.y', 31)
   def _reduce_22(val, _values, result)
-     return " "+val[0]+" "+val[1] 
+     return ' '+val[0]+' '+val[1] 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.y', 32)
   def _reduce_23(val, _values, result)
-     return val[0] + "+" + val[2] 
+     return val[0] + '+' + val[2] 
     result
   end
 .,.,
