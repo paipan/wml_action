@@ -9,7 +9,7 @@ module WMLAction
       class_option :verbose, type: :boolean, aliases: '-v'
       class_option :debug, type: :boolean, aliases: '-d'
 
-        desc "modify SRC DEST", "Modifies a wml"
+        desc "modify FILE MODS_FILE", "Modifies a WML"
         def modify(original,modlist)
             log.level=Logger::INFO if options[:verbose]
             log.level=Logger::DEBUG if options[:debug]

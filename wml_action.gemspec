@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = WMLAction::VERSION
   spec.authors       = ["Pancho"]
   spec.email         = ["paul.schko@gmail.com"]
-  spec.description   = %q{Parse wml and wml action files}
-  spec.summary       = %q{Parse wml and wml action files}
+  spec.description   = %q{Parses WML files and performs actions on them}
+  spec.summary       = %q{Parse WML and simple WML extension to make modifications to WML files }
   spec.homepage      = ""
   spec.license       = "MIT"
 
@@ -26,6 +26,8 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rubocop"
   spec.add_development_dependency "rubocop-rspec"
   spec.add_development_dependency "reek"
+  spec.add_development_dependency "cucumber"
+
 
   spec.add_development_dependency "racc"
   spec.add_development_dependency "oedipus_lex"
