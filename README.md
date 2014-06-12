@@ -18,7 +18,7 @@ Modifications:
   hp=25
   race="human"
   {REGENERATES}
-[unit]
+[/unit]
 ```
 Becomes:
 ```
@@ -27,7 +27,7 @@ Becomes:
   level=1
   race="human"
   {REGENERATES}
-[unit]
+[/unit]
 ```
 ### Adding tags
 File:

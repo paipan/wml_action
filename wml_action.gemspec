@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["paul.schko@gmail.com"]
   spec.description   = %q{Parses WML files and performs actions on them}
   spec.summary       = %q{Parse WML and simple WML extension to make modifications to WML files }
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/PaiPan/wml_action"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
