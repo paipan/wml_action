@@ -4,7 +4,7 @@ WMLAction is WML parser and modifier. WML modifications described as simple exte
 
 ## Features
 
-### Changing/adding attributes:
+### Changing/adding attributes
 File:
 ```
 [unit]
@@ -83,6 +83,28 @@ Becomes:
     range=melee
     damage=10
   [/attack]
+[/unit]
+```
+
+### Expressions
+File:
+```
+[unit]
+  hp=10
+  level=2
+[/unit]
+```
+Modifications:
+```
+[unit]
+  hp=`(hp+level)*2`
+[/unit]
+```
+Becomes:
+```
+[unit]
+  hp=24
+  level=2
 [/unit]
 ```
 
