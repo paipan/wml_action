@@ -75,5 +75,11 @@ module WMLAction
       expect(s.actions[3].object.name).to eq "resists"
     end
 
+    it 'reads expressions' do
+      d = Document.from_file('spec/fixtures/expr.cfg')
+      s = d.root
+      expect(s.attr['hp']).to eq Tag::Expression[[Var['hp'],5,Op['+']]]
+    end
+
   end
 end

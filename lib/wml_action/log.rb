@@ -4,7 +4,7 @@ module WMLAction
 
   module Log
     @@log ||= Logger.new(STDERR)
-    @@log.sev_threshold = Logger::ERROR
+    @@log.sev_threshold = Logger::DEBUG
 
     def log
       @@log

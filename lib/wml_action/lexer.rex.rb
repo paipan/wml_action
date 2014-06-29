@@ -16,11 +16,13 @@ class Parser < Racc::Parser
   CTAG    = /\[\/(\w+)\]/
   ATTR    = /(\w+)=/
   MACRO   = /\{.+\}/
-  ANUMBER = /-?\d+/
+  ANUMBER = /-?\d+(\.\d+)?/
   ASTR    = /"[^"]*"/
   APLAIN  = /.+/
   SLASH   = /\//
   COMMENT = /\#.*$/
+  BACKQ   = /\`/
+  VAR     = /[\w]+/
   BLANK   = /[ \t]+/
 
   class ScanError < StandardError ; end
@@ -110,8 +112,36 @@ class Parser < Racc::Parser
             action { [:UNDERSC, text] }
           when text = ss.scan(/\+/) then
             action { [:APLUS, text] }
+          when text = ss.scan(/#{BACKQ}/) then
+            action { @state = :INEXPR; [:BACKQ, text] }
           when text = ss.scan(/#{APLAIN}/) then
             action { [:APLAIN, text] }
+          else
+            text = ss.string[ss.pos .. -1]
+            raise ScanError, "can not match (#{state.inspect}): '#{text}'"
+          end
+        when :INEXPR then
+          case
+          when text = ss.scan(/#{BACKQ}/) then
+            action { @state = nil; [:BACKQ, text] }
+          when text = ss.scan(/\+/) then
+            action { [:EPLUS,text] }
+          when text = ss.scan(/\*/) then
+            action { [:EMUL,text] } 
+          when text = ss.scan(/\//) then
+            action { [:EDIV,text] }
+          when text = ss.scan(/\-/) then
+            action { [:EMINUS,text] }
+          when text = ss.scan(/\(/) then
+            action { [text,text] }
+          when text = ss.scan(/\)/) then
+            action { [text,text] }
+          when text = ss.scan(/{#ANUMBER}/) then
+            action { [:ENUM,text.to_f] }
+          when text = ss.scan(/#{ASTR}/) then
+            action { [:ESTR,text] }
+          when text = ss.scan(/#{VAR}/) then
+            action { [:EVAR,text] }
           else
             text = ss.string[ss.pos .. -1]
             raise ScanError, "can not match (#{state.inspect}): '#{text}'"

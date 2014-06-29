@@ -31,6 +31,12 @@ module WMLAction
       end
     end
 
+    Expr = Struct.new(:string) do
+      def to_s(indent=0, dummy=0)
+          string.to_s
+      end
+    end
+
     def initialize(values={})
       @name=values[:name]||""
       @subs=values[:subs]||Array.new
