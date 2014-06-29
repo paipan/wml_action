@@ -146,6 +146,24 @@ module WMLAction
 
       end
 
+      context 'when expression' do
+        let(:actions) do
+          a = Tag.new
+          a << Tag::Attribute[:damage, Tag::Expr[Tag::Expr::Var[:damage],1.0,Tag::Expr::Op['+']]]
+        end
+
+        let(:target) do
+          t = Tag.new
+          t << Tag::Attribute[:damage, 30]
+          t.merge(actions)
+        end
+
+        it 'evaluates expression' do
+          expect(target.attrs[:damage]).to eq 31
+        end
+
+      end
+
 
     end
 

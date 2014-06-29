@@ -78,6 +78,7 @@ module WMLAction
       log.info "Merging [#{@name}] section with [#{other.name}] with filter: #{other.filter}"
       other.attrs.each_pair do |key,value|
         log.debug "Processing key: #{key}=#{value}"
+        value = value.result(@attrs) if value.class==Expr
         @attrs.store(key,value)
       end
       other.macros.each do |macro|
