@@ -76,11 +76,22 @@ module WMLAction
       return self unless @name == other.name
       return self unless match?( other.filter )
       log.info "Merging [#{@name}] section with [#{other.name}] with filter: #{other.filter}"
+      delayed_attrs={}
       other.attrs.each_pair do |key,value|
         log.debug "Processing key: #{key}=#{value}"
-        value = value.result(@attrs) if value.class==Expr
+        if value.class==Expr
+            delayed_attrs.store(key,value)
+            next
+        end
         @attrs.store(key,value)
       end
+      saved_attrs=@attrs.clone unless delayed_attrs.empty?
+      delayed_attrs.each_pair do |key,value|
+        log.debug "Calculating attr expression: #{key}=#{value}"
+        result = value.result(@attrs)
+        @attrs.store(key,result)
+      end
+      saved_attrs=[]
       other.macros.each do |macro|
         log.debug "Adding macro: #{macro}"
         @macros<<(macro)

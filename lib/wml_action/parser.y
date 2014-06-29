@@ -22,7 +22,7 @@ rule
                 | expr EMINUS expr { log.debug "Found a #{val[0]} #{val[1]} #{val[2]} expression"; return val[0] << val[2] << Tag::Expr[Tag::Expr::Op[val[1]]] } 
                 | expr EMUL expr { log.debug "Found a #{val[0]} #{val[1]} #{val[2]} expression"; return val[0] << val[2] << Tag::Expr[Tag::Expr::Op[val[1]]] }
                 | expr EDIV expr { log.debug "Found a #{val[0]} #{val[1]} #{val[2]} expression"; return val[0] << val[2] << Tag::Expr[Tag::Expr::Op[val[1]]] }
-                #| EMINUS ENUMBER =EUMIN { return Tag:Expr[-val[1]] }
+                | EMINUS ENUMBER =EUMIN { return Tag:Expr[-val[1]] }
                 | '(' expr ')' { return val[1] }
                 | ESTR { log.debug "Found a string #{val[0]}"; return Tag::Expr[val[0]] }
                 | ENUM { log.debug "Found a number #{val[0]}"; return Tag::Expr[val[0]] }

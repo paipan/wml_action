@@ -4,14 +4,25 @@ module WMLAction
 
     attr_accessor :line
 
-    Var = Struct.new(:name)
-    Op = Struct.new(:value)
+    Var = Struct.new(:name) do
+        def to_s
+            name.to_s
+        end
+    end
+
+    Op = Struct.new(:value) do
+        def to_s
+            value.to_s
+        end
+    end
+
 
     def initialize(elements)
       @line = elements
     end
 
-    def result(vars)
+    def result(vars={})
+        return '' if @line.empty?
         stack=[]
         @line.each do |e|
             case e
@@ -19,7 +30,7 @@ module WMLAction
             when Op then
                 x2 = stack.pop
                 x1 = stack.pop
-                raise SyntaxError.new("Invalid expression #{@line.join(' ')}, no values in stack") unless x1 && x2
+                raise SyntaxError.new("Invalid expression #{dump}, no values in stack") unless x1 && x2
                 case e.value
                 when '+' then stack.push(x1+x2)
                 when '-' then stack.push(x1-x2)
@@ -30,8 +41,8 @@ module WMLAction
             else stack.push e
             end
         end
-        raise SyntaxError.new("Invalid expression #{@line.join(' ')}, still have #{stack.size} values") unless stack.size == 1
-        stack[0].floor if stack[0].class==Float
+        raise SyntaxError.new("Invalid expression #{dump}, still have #{stack.size} values") unless stack.size == 1
+        return stack[0].to_i if stack[0].class==Float
         return stack[0]
     end
 
@@ -40,7 +51,13 @@ module WMLAction
     end
 
     def to_s
-        @line.to_s
+        #TODO should revert to infix notation for file output
+        # needed to read outputted file
+        dump
+    end
+
+    def dump
+        @line.join(' ')
     end
 
     def <<(other)

@@ -23,54 +23,56 @@ include Log
 ##### State transition tables begin ###
 
 racc_action_table = [
-     4,     8,    14,    22,    40,    41,    42,    43,    31,    50,
-     4,    45,    21,    16,    17,    18,    23,    25,    26,    28,
-    29,    18,    19,    33,    37,    34,    35,    36,    33,    38,
-    34,    35,    36,    33,     7,    34,    35,    36,    39,    40,
-    41,    42,    43,    33,     5,    34,    35,    36,    33,     4,
-    34,    35,    36,    33,   nil,    34,    35,    36,    40,    41,
-    42,    43,    40,    41,    42,    43,    40,    41,    42,    43,
-    40,    41,    42,    43 ]
+     4,     8,    14,    22,    33,     4,    45,    21,    31,    34,
+    47,    35,    36,    37,    39,    16,    17,    18,    23,    25,
+    26,    28,    29,    18,    19,    33,    41,    42,    43,    44,
+    34,    33,    35,    36,    37,    38,    34,    33,    35,    36,
+    37,     7,    34,    33,    35,    36,    37,     5,    34,    33,
+    35,    36,    37,     4,    34,   nil,    35,    36,    37,    41,
+    42,    43,    44,   nil,   nil,   nil,    52,    40,    41,    42,
+    43,    44,    41,    42,    43,    44,    41,    42,    43,    44,
+    41,    42,    43,    44 ]
 
 racc_action_check = [
-     6,     6,     6,    18,    44,    44,    44,    44,    19,    44,
-    15,    37,    15,     6,     6,     6,    18,    18,    18,    18,
-    18,    19,     6,    33,    24,    33,    33,    33,    41,    29,
-    41,    41,    41,    42,     5,    42,    42,    42,    32,    32,
-    32,    32,    32,    40,     1,    40,    40,    40,    43,     0,
-    43,    43,    43,    22,   nil,    22,    22,    22,    46,    46,
-    46,    46,    47,    47,    47,    47,    48,    48,    48,    48,
-    49,    49,    49,    49 ]
+     6,     6,     6,    18,    42,    15,    33,    15,    19,    42,
+    38,    42,    42,    42,    29,     6,     6,     6,    18,    18,
+    18,    18,    18,    19,     6,    34,    48,    48,    48,    48,
+    34,    43,    34,    34,    34,    24,    43,    41,    43,    43,
+    43,     5,    41,    44,    41,    41,    41,     1,    44,    22,
+    44,    44,    44,     0,    22,   nil,    22,    22,    22,    46,
+    46,    46,    46,   nil,   nil,   nil,    46,    32,    32,    32,
+    32,    32,    51,    51,    51,    51,    49,    49,    49,    49,
+    50,    50,    50,    50 ]
 
 racc_action_pointer = [
-    47,    44,   nil,   nil,   nil,    34,    -2,   nil,   nil,   nil,
-   nil,   nil,   nil,   nil,   nil,     8,   nil,   nil,    -2,     4,
-   nil,   nil,    43,   nil,     1,   nil,   nil,   nil,   nil,     8,
-   nil,   nil,    33,    13,   nil,   nil,   nil,    -8,   nil,   nil,
-    33,    18,    23,    38,    -2,   nil,    52,    56,    60,    64,
-   nil ]
+    51,    47,   nil,   nil,   nil,    41,    -2,   nil,   nil,   nil,
+   nil,   nil,   nil,   nil,   nil,     3,   nil,   nil,    -2,     4,
+   nil,   nil,    42,   nil,    10,   nil,   nil,   nil,   nil,    -9,
+   nil,   nil,    62,    -4,    18,   nil,   nil,   nil,   -11,   nil,
+   nil,    30,    -3,    24,    36,   nil,    53,   nil,    20,    70,
+    74,    66,   nil ]
 
 racc_action_default = [
-    -1,   -36,    -2,    -3,    -5,   -36,   -36,    51,    -4,    -6,
-    -7,    -8,    -9,   -10,   -11,   -36,   -23,   -24,   -25,   -36,
-   -21,   -22,   -36,   -26,   -27,   -28,   -29,   -30,   -31,   -36,
-   -34,   -35,   -36,   -36,   -18,   -19,   -20,   -36,   -32,   -12,
-   -36,   -36,   -36,   -36,   -36,   -33,   -13,   -14,   -15,   -16,
-   -17 ]
+    -1,   -37,    -2,    -3,    -5,   -37,   -37,    53,    -4,    -6,
+    -7,    -8,    -9,   -10,   -11,   -37,   -24,   -25,   -26,   -37,
+   -22,   -23,   -37,   -27,   -28,   -29,   -30,   -31,   -32,   -37,
+   -35,   -36,   -37,   -37,   -37,   -19,   -20,   -21,   -37,   -33,
+   -12,   -37,   -37,   -37,   -37,   -17,   -37,   -34,   -13,   -14,
+   -15,   -16,   -18 ]
 
 racc_goto_table = [
     32,     3,    12,     1,     9,    10,     6,    11,    13,    27,
-     2,    44,    15,    24,   nil,    30,    20,   nil,    46,    47,
-    48,    49 ]
+     2,    15,    46,    24,   nil,    30,    20,   nil,   nil,    48,
+    49,    50,    51 ]
 
 racc_goto_check = [
     10,     3,     7,     1,     5,     6,     4,     3,     8,     9,
-     2,    10,    11,    12,   nil,     7,     3,   nil,    10,    10,
-    10,    10 ]
+     2,    11,    10,    12,   nil,     7,     3,   nil,   nil,    10,
+    10,    10,    10 ]
 
 racc_goto_pointer = [
    nil,     3,    10,     1,     2,    -2,    -1,    -4,     2,    -9,
-   -22,     6,    -5 ]
+   -22,     5,    -5 ]
 
 racc_goto_default = [
    nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,
@@ -78,45 +80,46 @@ racc_goto_default = [
 
 racc_reduce_table = [
   0, 0, :racc_error,
-  0, 26, :_reduce_none,
-  1, 26, :_reduce_2,
-  1, 27, :_reduce_3,
-  3, 28, :_reduce_4,
-  0, 29, :_reduce_5,
-  2, 29, :_reduce_6,
-  1, 30, :_reduce_none,
-  1, 30, :_reduce_8,
-  1, 30, :_reduce_none,
-  1, 30, :_reduce_none,
-  1, 30, :_reduce_11,
-  3, 34, :_reduce_12,
-  3, 35, :_reduce_13,
-  3, 35, :_reduce_14,
-  3, 35, :_reduce_15,
-  3, 35, :_reduce_16,
-  3, 35, :_reduce_17,
-  1, 35, :_reduce_18,
-  1, 35, :_reduce_19,
-  1, 35, :_reduce_20,
-  2, 31, :_reduce_21,
-  2, 31, :_reduce_22,
-  1, 36, :_reduce_none,
-  1, 36, :_reduce_none,
-  1, 32, :_reduce_25,
-  2, 32, :_reduce_26,
-  2, 32, :_reduce_27,
-  2, 32, :_reduce_28,
-  2, 32, :_reduce_29,
-  2, 32, :_reduce_30,
-  1, 37, :_reduce_31,
-  2, 37, :_reduce_32,
-  3, 37, :_reduce_33,
-  2, 33, :_reduce_34,
-  2, 33, :_reduce_35 ]
+  0, 28, :_reduce_none,
+  1, 28, :_reduce_2,
+  1, 29, :_reduce_3,
+  3, 30, :_reduce_4,
+  0, 31, :_reduce_5,
+  2, 31, :_reduce_6,
+  1, 32, :_reduce_none,
+  1, 32, :_reduce_8,
+  1, 32, :_reduce_none,
+  1, 32, :_reduce_none,
+  1, 32, :_reduce_11,
+  3, 36, :_reduce_12,
+  3, 37, :_reduce_13,
+  3, 37, :_reduce_14,
+  3, 37, :_reduce_15,
+  3, 37, :_reduce_16,
+  2, 37, :_reduce_17,
+  3, 37, :_reduce_18,
+  1, 37, :_reduce_19,
+  1, 37, :_reduce_20,
+  1, 37, :_reduce_21,
+  2, 33, :_reduce_22,
+  2, 33, :_reduce_23,
+  1, 38, :_reduce_none,
+  1, 38, :_reduce_none,
+  1, 34, :_reduce_26,
+  2, 34, :_reduce_27,
+  2, 34, :_reduce_28,
+  2, 34, :_reduce_29,
+  2, 34, :_reduce_30,
+  2, 34, :_reduce_31,
+  1, 39, :_reduce_32,
+  2, 39, :_reduce_33,
+  3, 39, :_reduce_34,
+  2, 35, :_reduce_35,
+  2, 35, :_reduce_36 ]
 
-racc_reduce_n = 36
+racc_reduce_n = 37
 
-racc_shift_n = 51
+racc_shift_n = 53
 
 racc_token_table = {
   false => 0,
@@ -129,23 +132,25 @@ racc_token_table = {
   :EMINUS => 7,
   :EMUL => 8,
   :EDIV => 9,
-  "(" => 10,
-  ")" => 11,
-  :ESTR => 12,
-  :ENUM => 13,
-  :EVAR => 14,
-  "+" => 15,
-  "-" => 16,
-  :ATTR => 17,
-  :APLAIN => 18,
-  :AMACRO => 19,
-  :ANUMBER => 20,
-  :ASTR => 21,
-  :UNDERSC => 22,
-  :APLUS => 23,
-  :SLASH => 24 }
+  :ENUMBER => 10,
+  :EUMIN => 11,
+  "(" => 12,
+  ")" => 13,
+  :ESTR => 14,
+  :ENUM => 15,
+  :EVAR => 16,
+  "+" => 17,
+  "-" => 18,
+  :ATTR => 19,
+  :APLAIN => 20,
+  :AMACRO => 21,
+  :ANUMBER => 22,
+  :ASTR => 23,
+  :UNDERSC => 24,
+  :APLUS => 25,
+  :SLASH => 26 }
 
-racc_nt_base = 25
+racc_nt_base = 27
 
 racc_use_result_var = true
 
@@ -176,6 +181,8 @@ Racc_token_to_s_table = [
   "EMINUS",
   "EMUL",
   "EDIV",
+  "ENUMBER",
+  "EUMIN",
   "\"(\"",
   "\")\"",
   "ESTR",
@@ -303,124 +310,131 @@ module_eval(<<'.,.,', 'parser.y', 23)
   end
 .,.,
 
-module_eval(<<'.,.,', 'parser.y', 25)
+module_eval(<<'.,.,', 'parser.y', 24)
   def _reduce_17(val, _values, result)
+     return Tag:Expr[-val[1]] 
+    result
+  end
+.,.,
+
+module_eval(<<'.,.,', 'parser.y', 25)
+  def _reduce_18(val, _values, result)
      return val[1] 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.y', 26)
-  def _reduce_18(val, _values, result)
+  def _reduce_19(val, _values, result)
      log.debug "Found a string #{val[0]}"; return Tag::Expr[val[0]] 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.y', 27)
-  def _reduce_19(val, _values, result)
+  def _reduce_20(val, _values, result)
      log.debug "Found a number #{val[0]}"; return Tag::Expr[val[0]] 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.y', 28)
-  def _reduce_20(val, _values, result)
+  def _reduce_21(val, _values, result)
      log.debug "Found a variable #{val[0]}"; return Tag::Expr[Tag::Expr::Var[val[0]]] 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.y', 30)
-  def _reduce_21(val, _values, result)
+  def _reduce_22(val, _values, result)
      log.debug "Found a action tag #{val[0]}:#{val[1]}"; return Tag::Action[val[1],val[0]] 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.y', 31)
-  def _reduce_22(val, _values, result)
+  def _reduce_23(val, _values, result)
      log.debug "Found a action mac #{val[0]}:#{val[1]}"; return Tag::Action[Tag::Macro[val[1]],val[0]] 
     result
   end
 .,.,
 
-# reduce 23 omitted
-
 # reduce 24 omitted
 
+# reduce 25 omitted
+
 module_eval(<<'.,.,', 'parser.y', 36)
-  def _reduce_25(val, _values, result)
+  def _reduce_26(val, _values, result)
      log.debug "Found empty attribute: #{val[0]}"; return Tag::Attribute[val[0],''] 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.y', 37)
-  def _reduce_26(val, _values, result)
+  def _reduce_27(val, _values, result)
      log.debug "Found plain attribute: #{val[0]}:#{val[1]}"; return Tag::Attribute[val[0],val[1]] 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.y', 38)
-  def _reduce_27(val, _values, result)
+  def _reduce_28(val, _values, result)
      log.debug "Found string attribute: #{val[0]}:#{val[1]}"; return Tag::Attribute[val[0],val[1]] 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.y', 39)
-  def _reduce_28(val, _values, result)
+  def _reduce_29(val, _values, result)
      log.debug "Found macro attribute: #{val[0]}:#{val[1]}"; return Tag::Attribute[val[0],val[1]] 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.y', 40)
-  def _reduce_29(val, _values, result)
+  def _reduce_30(val, _values, result)
      log.debug "Found numeric attribute: #{val[0]}:#{val[1]}"; return Tag::Attribute[val[0],val[1]]  
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.y', 41)
-  def _reduce_30(val, _values, result)
+  def _reduce_31(val, _values, result)
      log.debug "Found expression attribute: #{val[0]}"; return Tag::Attribute[val[0],val[1]] 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.y', 43)
-  def _reduce_31(val, _values, result)
+  def _reduce_32(val, _values, result)
      return " #{val[0]}" 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.y', 44)
-  def _reduce_32(val, _values, result)
+  def _reduce_33(val, _values, result)
      return ' '+val[0]+' '+val[1] 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.y', 45)
-  def _reduce_33(val, _values, result)
+  def _reduce_34(val, _values, result)
      return val[0] + '+' + val[2] 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.y', 47)
-  def _reduce_34(val, _values, result)
+  def _reduce_35(val, _values, result)
      log.debug "Found an attribute filter #{val[1]}"; return Tag::Filter[val[1]] 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.y', 48)
-  def _reduce_35(val, _values, result)
+  def _reduce_36(val, _values, result)
      log.debug "Found a macro filter #{val[1]}"; return Tag::Filter[Tag::Macro[val[1]]] 
     result
   end

@@ -5,25 +5,35 @@ module WMLAction
 
   describe Tag do
 
+    before(:all) do
+        Attr = Tag::Attribute
+        Macro = Tag::Macro
+        Action = Tag::Action
+        Filter = Tag::Filter
+        Var = Tag::Expr::Var unless WMLAction.const_defined? 'Var'
+        Op = Tag::Expr::Op unless WMLAction.const_defined? 'Op'
+        Expr = Tag::Expr unless WMLAction.const_defined? 'Expr'
+    end
+
     describe '#merge' do
 
       context 'when no action' do
 
         let(:actions) do
           a = Tag.new
-          a << Tag::Attribute[:hp,25]
-          a << Tag::Macro['{REGENERATE}']
+          a << Attr[:hp,25]
+          a << Macro['{REGENERATE}']
           sub = Tag.new(name: 'attack')
-          sub << Tag::Attribute[:type,'blunt']
+          sub << Attr[:type,'blunt']
           a << sub
           sub = Tag.new(name: 'resists')
-          sub << Tag::Attribute[:cold,100]
+          sub << Attr[:cold,100]
           a << sub
         end
 
         let(:target) do
           t = Tag.new
-          t << Tag::Attribute[:hp,10]
+          t << Attr[:hp,10]
           t << Tag.new(name: 'attack')
           t << Tag.new(name: 'attack')
           t.merge(actions)
@@ -34,7 +44,7 @@ module WMLAction
         end
 
         it 'merges existing sections' do
-          # TODO Should it works through check receiving messages?
+          # TODO Should this test works through check target receiving messages?
           expect(target.subs[0].attrs).to include :type
           expect(target.subs[1].attrs).to include :type
         end
@@ -58,11 +68,11 @@ module WMLAction
         let(:actions) do
           a = Tag.new
           sub = Tag.new(name: 'attack')
-          sub << Tag::Attribute[:type,'blunt']
-          a << Tag::Action[sub, '+']
+          sub << Attr[:type,'blunt']
+          a << Action[sub, '+']
           sub = Tag.new(name: 'resists')
-          a << Tag::Action[sub, '+']
-          a << Tag::Action[Tag::Macro['{REGENERATE}'], '+']
+          a << Action[sub, '+']
+          a << Action[Macro['{REGENERATE}'], '+']
           a
         end
 
@@ -92,14 +102,14 @@ module WMLAction
         let(:actions) do
           a = Tag.new
           sub = Tag.new(name: 'attack')
-          a << Tag::Action[sub,'-']
-          a << Tag::Action[Tag::Macro['{REGENERATE}'], '-']
+          a << Action[sub,'-']
+          a << Action[Macro['{REGENERATE}'], '-']
         end
 
         let(:target) do
           t = Tag.new
           t << Tag.new(name: 'attack')
-          t << Tag::Macro['{REGENERATE}']
+          t << Macro['{REGENERATE}']
           t.merge(actions)
         end
 
@@ -117,20 +127,20 @@ module WMLAction
         let(:actions) do
           a = Tag.new
           sub = Tag.new(name: 'attack')
-          sub << Tag::Filter[Tag::Attribute[:type,'blunt']]
-          sub << Tag::Attribute[:damage, 30]
+          sub << Filter[Attr[:type,'blunt']]
+          sub << Attr[:damage, 30]
           a << sub
         end
 
         let(:target) do
           t = Tag.new
           sub = Tag.new(name: 'attack')
-          sub << Tag::Attribute[:type,'blunt']
-          sub << Tag::Attribute[:damage, 25]
+          sub << Attr[:type,'blunt']
+          sub << Attr[:damage, 25]
           t << sub
           sub = Tag.new(name: 'attack')
-          sub << Tag::Attribute[:type,'pierce']
-          sub << Tag::Attribute[:damage, 25]
+          sub << Attr[:type,'pierce']
+          sub << Attr[:damage, 25]
           t << sub
           t.merge(actions)
         end
@@ -149,12 +159,12 @@ module WMLAction
       context 'when expression' do
         let(:actions) do
           a = Tag.new
-          a << Tag::Attribute[:damage, Tag::Expr[Tag::Expr::Var[:damage],1.0,Tag::Expr::Op['+']]]
+          a << Attr[:damage, Expr[Var[:damage],1.0,Op['+']]]
         end
 
         let(:target) do
           t = Tag.new
-          t << Tag::Attribute[:damage, 30]
+          t << Attr[:damage, 30]
           t.merge(actions)
         end
 
@@ -170,7 +180,7 @@ module WMLAction
     describe '#add and #<<' do
 
       it 'returns self' do
-        s = Tag.new << Tag::Attribute[:hp,25]
+        s = Tag.new << Attr[:hp,25]
         expect(s).to be_kind_of(Tag)
       end
 
@@ -188,8 +198,8 @@ module WMLAction
       end
 
       it 'prints attributes' do
-        s << Tag::Attribute[:hp,25]
-        s << Tag::Attribute[:race,'human']
+        s << Attr[:hp,25]
+        s << Attr[:race,'human']
         expect(s.to_s).to eq <<-EOS.gsub(/^\s+\|/, '')
         |[unit]
         |\thp=25
@@ -199,8 +209,8 @@ module WMLAction
       end
 
       it 'prints macros' do
-        s << Tag::Macro['{REGENERATES}']
-        s << Tag::Macro['{INVISIBLE}']
+        s << Macro['{REGENERATES}']
+        s << Macro['{INVISIBLE}']
         expect(s.to_s).to eq <<-EOS.gsub(/^\s+\|/, '')
         |[unit]
         |\t{REGENERATES}
@@ -223,8 +233,8 @@ module WMLAction
       end
 
       it 'prints filters' do
-        s << Tag::Filter[Tag::Attribute[:hp,25]]
-        s << Tag::Filter[Tag::Macro['{REGENERATES}']]
+        s << Filter[Attr[:hp,25]]
+        s << Filter[Macro['{REGENERATES}']]
         expect(s.to_s).to eq <<-EOS.gsub(/^\s+\|/, '')
         |[unit]
         |\t/ hp=25
@@ -234,8 +244,8 @@ module WMLAction
       end
 
       it 'prints actions' do
-        s << Tag::Action[Tag.new(name: 'attack'),'+']
-        s << Tag::Action[Tag::Macro['{REGENERATES}'],'-']
+        s << Action[Tag.new(name: 'attack'),'+']
+        s << Action[Macro['{REGENERATES}'],'-']
         expect(s.to_s).to eq <<-EOS.gsub(/^\s+\|/, '')
         |[unit]
         |\t+ [attack]
