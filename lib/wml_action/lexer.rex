@@ -51,7 +51,7 @@ rule
     :INEXPR /\-/                { [:EMINUS,text] }
     :INEXPR /\(/                { [text,text] }
     :INEXPR /\)/                { [text,text] }
-    :INEXPR /{#ANUMBER}/        { [:ENUM,text.to_f] }
+    :INEXPR /#{ANUMBER}/        { [:ENUM,text.to_f] }
     :INEXPR /#{ASTR}/           { [:ESTR,text] }
     :INEXPR /#{VAR}/            { [:EVAR,text] }
 

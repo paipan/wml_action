@@ -78,7 +78,8 @@ module WMLAction
     it 'reads expressions' do
       d = Document.from_file('spec/fixtures/expr.cfg')
       s = d.root
-      expect(s.attr['hp']).to eq Tag::Expression[[Var['hp'],5,Op['+']]]
+      expect(s.attr('hp')).to eq Tag::Expr[Tag::Expr::Var['hp'],3.0,Tag::Expr::Op['+']]
+      expect(s.attr('damage')).to eq Tag::Expr[Tag::Expr::Var['damage'],1.0,Tag::Expr::Op['-'],2.0,Tag::Expr::Op['*']]
     end
 
   end

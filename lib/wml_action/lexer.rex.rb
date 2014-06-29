@@ -136,7 +136,7 @@ class Parser < Racc::Parser
             action { [text,text] }
           when text = ss.scan(/\)/) then
             action { [text,text] }
-          when text = ss.scan(/{#ANUMBER}/) then
+          when text = ss.scan(/#{ANUMBER}/) then
             action { [:ENUM,text.to_f] }
           when text = ss.scan(/#{ASTR}/) then
             action { [:ESTR,text] }

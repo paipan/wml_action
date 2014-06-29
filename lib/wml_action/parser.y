@@ -12,23 +12,21 @@ rule
 
     content     : action
                 | tag      { log.debug "Found a content subtag #{val[0]}" }
-                | expression
                 | attribute
                 | filter
                 | MACRO    { log.debug "Found a macro #{val[0]}"; return Tag::Macro[val[0]] }
     
     expression  : BACKQ expr BACKQ { return val[1] }
 
-    expr        : 
-                | expr EPLUS expr { return val[0] << val[2] << Tag::Expr[val[1]] }
-                | expr EMINUS expr { return val[0] << val[2] << Tag::Expr[val[1]] } 
-                | expr EMUL expr { return val[0] << val[2] << Tag::Expr[val[1]] }
-                | expr EDIV expr { return val[0] << val[2] << Tag::Expr[val[1]] }
+    expr        : expr EPLUS expr { log.debug "Found a #{val[0]} #{val[1]} #{val[2]} expression"; return val[0] << val[2] << Tag::Expr[Tag::Expr::Op[val[1]]] }
+                | expr EMINUS expr { log.debug "Found a #{val[0]} #{val[1]} #{val[2]} expression"; return val[0] << val[2] << Tag::Expr[Tag::Expr::Op[val[1]]] } 
+                | expr EMUL expr { log.debug "Found a #{val[0]} #{val[1]} #{val[2]} expression"; return val[0] << val[2] << Tag::Expr[Tag::Expr::Op[val[1]]] }
+                | expr EDIV expr { log.debug "Found a #{val[0]} #{val[1]} #{val[2]} expression"; return val[0] << val[2] << Tag::Expr[Tag::Expr::Op[val[1]]] }
                 #| EMINUS ENUMBER =EUMIN { return Tag:Expr[-val[1]] }
                 | '(' expr ')' { return val[1] }
-                | ESTR { return Tag::Expr[val[0]] }
-                | ENUM { return Tag::Expr[val[0]] }
-                | EVAR { return Tag::Expr[val[0]] }
+                | ESTR { log.debug "Found a string #{val[0]}"; return Tag::Expr[val[0]] }
+                | ENUM { log.debug "Found a number #{val[0]}"; return Tag::Expr[val[0]] }
+                | EVAR { log.debug "Found a variable #{val[0]}"; return Tag::Expr[Tag::Expr::Var[val[0]]] }
 
     action      : aop tag { log.debug "Found a action tag #{val[0]}:#{val[1]}"; return Tag::Action[val[1],val[0]] }
                 | aop MACRO { log.debug "Found a action mac #{val[0]}:#{val[1]}"; return Tag::Action[Tag::Macro[val[1]],val[0]] }
@@ -41,6 +39,7 @@ rule
                 | ATTR string_val     { log.debug "Found string attribute: #{val[0]}:#{val[1]}"; return Tag::Attribute[val[0],val[1]] }
                 | ATTR AMACRO   { log.debug "Found macro attribute: #{val[0]}:#{val[1]}"; return Tag::Attribute[val[0],val[1]] }
                 | ATTR ANUMBER  { log.debug "Found numeric attribute: #{val[0]}:#{val[1]}"; return Tag::Attribute[val[0],val[1]]  }
+                | ATTR expression { log.debug "Found expression attribute: #{val[0]}"; return Tag::Attribute[val[0],val[1]] }
 
     string_val  : ASTR { return " #{val[0]}" }
                 | UNDERSC ASTR { return ' '+val[0]+' '+val[1] }
