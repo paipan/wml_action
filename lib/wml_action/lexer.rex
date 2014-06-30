@@ -49,10 +49,11 @@ rule
     :INEXPR /\*/                { [:EMUL,text] } 
     :INEXPR /\//                { [:EDIV,text] }
     :INEXPR /\-/                { [:EMINUS,text] }
+    :INEXPR /\./                { [:EDOT,text] }
     :INEXPR /\(/                { [text,text] }
     :INEXPR /\)/                { [text,text] }
     :INEXPR /#{ANUMBER}/        { [:ENUM,text.to_f] }
-    :INEXPR /#{ASTR}/           { [:ESTR,text] }
+    :INEXPR /#{ASTR}/           { [:ESTR,text.slice(1..-2)] }
     :INEXPR /#{VAR}/            { [:EVAR,text] }
 
             /./

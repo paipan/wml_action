@@ -132,6 +132,8 @@ class Parser < Racc::Parser
             action { [:EDIV,text] }
           when text = ss.scan(/\-/) then
             action { [:EMINUS,text] }
+          when text = ss.scan(/\./) then
+            action { [:EDOT,text] }
           when text = ss.scan(/\(/) then
             action { [text,text] }
           when text = ss.scan(/\)/) then
@@ -139,7 +141,7 @@ class Parser < Racc::Parser
           when text = ss.scan(/#{ANUMBER}/) then
             action { [:ENUM,text.to_f] }
           when text = ss.scan(/#{ASTR}/) then
-            action { [:ESTR,text] }
+            action { [:ESTR,text.slice(1..-2)] }
           when text = ss.scan(/#{VAR}/) then
             action { [:EVAR,text] }
           else

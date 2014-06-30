@@ -1,4 +1,11 @@
 class WMLAction::Parser
+
+prechigh
+  nonassoc EUMIN
+  left '*' '/'
+  left '+' '-' '.'
+preclow
+
 rule
     target      : /* nothing */
                 | wml_doc { log.debug 'Found a target' }
@@ -22,6 +29,7 @@ rule
                 | expr EMINUS expr { log.debug "Found a #{val[0]} #{val[1]} #{val[2]} expression"; return val[0] << val[2] << Tag::Expr[Tag::Expr::Op[val[1]]] } 
                 | expr EMUL expr { log.debug "Found a #{val[0]} #{val[1]} #{val[2]} expression"; return val[0] << val[2] << Tag::Expr[Tag::Expr::Op[val[1]]] }
                 | expr EDIV expr { log.debug "Found a #{val[0]} #{val[1]} #{val[2]} expression"; return val[0] << val[2] << Tag::Expr[Tag::Expr::Op[val[1]]] }
+                | expr EDOT expr { log.debug "Found a #{val[0]} #{val[1]} #{val[2]} expression"; return val[0] << val[2] << Tag::Expr[Tag::Expr::Op[val[1]]] }
                 | EMINUS ENUMBER =EUMIN { return Tag:Expr[-val[1]] }
                 | '(' expr ')' { return val[1] }
                 | ESTR { log.debug "Found a string #{val[0]}"; return Tag::Expr[val[0]] }
@@ -29,7 +37,7 @@ rule
                 | EVAR { log.debug "Found a variable #{val[0]}"; return Tag::Expr[Tag::Expr::Var[val[0]]] }
 
     action      : aop tag { log.debug "Found a action tag #{val[0]}:#{val[1]}"; return Tag::Action[val[1],val[0]] }
-                | aop MACRO { log.debug "Found a action mac #{val[0]}:#{val[1]}"; return Tag::Action[Tag::Macro[val[1]],val[0]] }
+                | aop MACRO { log.debug "Found a action macro #{val[0]}:#{val[1]}"; return Tag::Action[Tag::Macro[val[1]],val[0]] }
 
     aop         : '+'
                 | '-'
