@@ -43,11 +43,6 @@ module WMLAction
             expect(e.result).to be_integer
         end
 
-        it 'concatenates strings' do
-            e=Expr['Hello',' World!',Op['+']]
-            expect(e.result).to eq 'Hello World!'
-        end
-
         it 'substitute variables' do
             e=Expr[Var[:a],Var[:b],Op['+']]
             expect(e.result({a: 1, b: 3})).to eq 4
@@ -58,20 +53,39 @@ module WMLAction
             expect(e.result).to eq ''
         end
 
-        it 'raises syntax error on error with binary op' do
-            e=Expr[1,Op['+']]
-            expect { e.result }.to raise_error
+        context 'when operates with strings' do
+
+            it 'concatenates strings' do
+                e=Expr['Hello',' World!',Op['+']]
+                expect(e.result).to eq 'Hello World!'
+            end
+
+            it 'keeps quotes in strings operations' do
+                pending('Probably should implement this feature by intorducing new operation')
+                e=Expr[%Q("Hello"),' World!',Op['+']]
+                expect(e.result).to eq %Q("Hello World!")
+            end
+
         end
 
-        it 'raises syntax error on error with lack of op' do
-            e=Expr[1,2]
-            expect { e.result }.to raise_error
+        context 'when invalid expression' do
+
+            it 'raises syntax error on error with binary op' do
+                e=Expr[1,Op['+']]
+                expect { e.result }.to raise_error
+            end
+
+            it 'raises syntax error on error with lack of op' do
+                e=Expr[1,2]
+                expect { e.result }.to raise_error
+            end
+
         end
 
     end
 
     describe '#dump' do
-        it 'dumps' do
+        it 'dumps expr to string' do
             e=Expr[Var['hp'],1,Op['+'],2,Op['*']]
             expect(e.dump).to eq 'hp 1 + 2 *'
         end
