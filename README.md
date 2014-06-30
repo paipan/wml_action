@@ -92,12 +92,14 @@ File:
 [unit]
   hp=10
   level=2
+  name=_ "Archer"
 [/unit]
 ```
 Modifications:
 ```
 [unit]
   hp=`(hp+level)*2`
+  name=`"Tough ".name`
 [/unit]
 ```
 Becomes:
@@ -105,6 +107,7 @@ Becomes:
 [unit]
   hp=24
   level=2
+  name=_ "Tough Archer"
 [/unit]
 ```
 
