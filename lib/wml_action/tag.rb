@@ -73,6 +73,7 @@ module WMLAction
     end
 
     def merge(other)
+      return self if other.nil?
       return self unless @name == other.name
       return self unless match?( other.filter )
       log.info "Merging [#{@name}] section with [#{other.name}] with filter: #{other.filter}"
