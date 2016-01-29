@@ -42,6 +42,7 @@ rule
     :INATTR /_/                 { [:UNDERSC, text] }
     :INATTR /\+/                { [:APLUS, text] }
     :INATTR /#{BACKQ}/          { @state = :INEXPR; [:BACKQ, text] }
+    :INATTR /#{COMMENT}/
     :INATTR /#{APLAIN}/         { [:APLAIN, text] }
 
     :INEXPR /#{BACKQ}/          { @state = nil; [:BACKQ, text] }

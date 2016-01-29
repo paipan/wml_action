@@ -114,6 +114,8 @@ class Parser < Racc::Parser
             action { [:APLUS, text] }
           when text = ss.scan(/#{BACKQ}/) then
             action { @state = :INEXPR; [:BACKQ, text] }
+          when text = ss.scan(/#{COMMENT}/) then
+            # do nothing
           when text = ss.scan(/#{APLAIN}/) then
             action { [:APLAIN, text] }
           else
